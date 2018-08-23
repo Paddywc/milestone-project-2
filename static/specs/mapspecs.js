@@ -4,19 +4,17 @@ describe('toggleButtonActiveClass function', function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
     })
 
-    it("Should exist", function() {
+    it("should exist", function() {
         expect(toggleButtonActiveClass).toBeDefined();
     });
 
-    it("Should add the active class and remove the disabled class when clicking on a disabled button", function() {
+    it("should add the active class and remove the disabled class when clicking on a disabled button", function() {
         $("#activities-btn").click()
         let hasActiveClass = $("#activities-btn").hasClass("active");
         let hasDisabledClass = $("#activities-btn").hasClass("disabled");
         expect(hasActiveClass).toBe(true);
         expect(hasDisabledClass).toBe(false);
     });
-
-
 
 });
 
@@ -26,17 +24,16 @@ describe('getSearchString function', function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
     })
 
-
-    it("Should exist", function() {
+    it("should exist", function() {
         expect(getSearchString).toBeDefined();
     });
 
-    it("Should return a string", function() {
+    it("should return a string", function() {
         searchString = getSearchString()
         expect(typeof searchString).toBe("string")
     })
 
-    it("Should add search queries to returned string on button click", function() {
+    it("should add search queries to returned string on button click", function() {
         $("#food-drink-btn").click();
         let firstSearchString = getSearchString();
         expect(firstSearchString).toBe('food,bars');
@@ -49,11 +46,50 @@ describe('getSearchString function', function() {
         $("#food-drink-btn").click();
         let thirdSearchString = getSearchString()
         expect(thirdSearchString).toBe(firstSearchString + secondSearchString);
+    });
+
+});
+
+describe('getYelpResults function', function() {
+    
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+    //enables testing of asynchronous functions
+    // postpones running of 'it' functions 
+    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+    beforeEach(function(done) {
+        setTimeout(function() {
+            result = 'a different value';
+            done();
+        }, 9000);
+    });
+    
+    var results;
+    getYelpData(53.3498053, -6.260309, "food,bars").then(function(returnData) {
+        results = returnData;
+    });
+
+    it("Should exist", function() {
+        expect(getYelpData).toBeDefined();
+    });
+
+    it("Should return and object", function() {
+        console.log(results)
+        expect(typeof results).toBe("object")
+
+    });
 
 
+});
 
-    })
-
-
-
+describe('generateNewMap function', function() {
+  it("should exist", function() {
+    expect(generateNewMap).toBeDefined();
+  });
+  
+  it ("should return a road object", function() {
+      map = generateNewMap();
+      expect(typeof map).toBe("object");
+      expect(map.mapTypeId).toBe("roadmap");
+  })
 });
