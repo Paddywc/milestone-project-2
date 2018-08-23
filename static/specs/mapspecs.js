@@ -82,38 +82,38 @@
 
 // });
 
-describe("retrieveRequiredYelpData function", function() {
+// describe("retrieveRequiredYelpData function", function() {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+//     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-    //enables testing of asynchronous functions
-    // postpones running of 'it' functions 
-    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
-    beforeEach(function(done) {
-        setTimeout(function() {
-            result = 'a different value';
-            done();
-        }, 9000);
-    });
+//     //enables testing of asynchronous functions
+//     // postpones running of 'it' functions 
+//     //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+//     beforeEach(function(done) {
+//         setTimeout(function() {
+//             result = 'a different value';
+//             done();
+//         }, 9000);
+//     });
 
-    var yelpData
+//     var yelpData
 
-    getYelpData(53.3498053, -6.260309, "food,bar").then(function(yelpResponse) {
-        yelpData = retrieveRequiredYelpData(yelpResponse);
-    });
+//     getYelpData(53.3498053, -6.260309, "food,bar").then(function(yelpResponse) {
+//         yelpData = retrieveRequiredYelpData(yelpResponse);
+//     });
 
-    it("should return variables of the expected type", function() {
-        expect(typeof yelpData[0]).toBe("object");
-        expect(typeof yelpData[0].name).toBe("string");
-        expect(yelpData[0].img).toContain("http");
-        expect(typeof yelpData[0].yelpRating).toBe("number");
-        expect(yelpData[0].yelpPage).toContain("www.yelp.com");
-    })
+//     it("should return variables of the expected type", function() {
+//         expect(typeof yelpData[0]).toBe("object");
+//         expect(typeof yelpData[0].name).toBe("string");
+//         expect(yelpData[0].img).toContain("http");
+//         expect(typeof yelpData[0].yelpRating).toBe("number");
+//         expect(yelpData[0].yelpPage).toContain("www.yelp.com");
+//     })
 
-    it("should exist", function() {
-        expect(retrieveRequiredYelpData).toBeDefined();
-    });
-})
+//     it("should exist", function() {
+//         expect(retrieveRequiredYelpData).toBeDefined();
+//     });
+// })
 
 // describe('generateNewMap function', function() {
 
@@ -142,3 +142,21 @@ describe("retrieveRequiredYelpData function", function() {
 //       expect(map.mapTypeId).toBe("roadmap");
 //   })
 // });
+
+describe("ifUndefinedReturnNA function", function() {
+  it("should exist", function() {
+    expect(ifUndefinedReturnNA).toBeDefined();
+  });
+
+  let firstResult = ifUndefinedReturnNA(undefined);
+  it("should return 'N/A' when undefined entered  ", function() {
+    expect(firstResult).toBeDefined();
+    expect(firstResult).toBe('N/A');
+  });
+
+  let definedArgument = "test argument";
+  let secondResult = ifUndefinedReturnNA(definedArgument);
+  it("should return argument if argument is not undefined ", function() {
+    expect(secondResult).toBe(definedArgument);
+  });
+});

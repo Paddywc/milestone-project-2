@@ -35,17 +35,17 @@ function returnData(data) {
     return data;
 }
 
- function returnBusinessData(response){
-        return response.businesses;
-    }
+function returnBusinessData(response) {
+    return response.businesses;
+}
 
 function getYelpData(latitude, longitude, searchQuery) {
-    
+
     function handleError(xhr, status, error) {
         console.log('Error! Failed to retrieve data. ' + xhr.status + ' error');
     }
 
-   
+
     // Enables cors anywhere
     // Code from: https://github.com/Rob--W/cors-anywhere
     jQuery.ajaxPrefilter(function(options) {
@@ -96,25 +96,35 @@ function initMapDestinationExplorer() {
 }
 
 
+ function ifUndefinedReturnNA (valueToCheck) {
+    if (valueToCheck == null) {
+        return 'N/A'
+    }
+    else {
+        return valueToCheck
+    }
+}
+
+
 // Filter out unnecessary data and names 
 // latitude and longitude lat and lng. This is required
 // for google maps API to place markers 
-function retrieveRequiredYelpData(yelpData){
+function retrieveRequiredYelpData(yelpData) {
     businesses = yelpData.businesses;
     requiredYelpData = []
-    businesses.forEach(function(business){
+    businesses.forEach(function(business) {
         let businessObject = {
-            name : business.name,
-            img  : business.image_url,
-            yelpPrice : business.price,
-            yelpRating : business.rating,
-            yelpPage:  business.url,
+            name: business.name,
+            img: business.image_url,
+            yelpPrice: ifUndefinedReturnNA(business.price),
+            yelpRating: business.rating,
+            yelpPage: business.url,
             lat: business.coordinates.latitude,
             lng: business.coordinates.longitude
         };
         requiredYelpData.push(businessObject);
     });
-    
+
     return requiredYelpData
 }
 
