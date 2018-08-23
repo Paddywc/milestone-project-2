@@ -35,12 +35,17 @@ function returnData(data) {
     return data;
 }
 
-function getYelpData(latitude, longitude, searchQuery) {
-    function handleError(xhr, status, error) {
-        alert('Error! Failed to retrieve data. ' + xhr.status + ' error');
+ function returnBusinessData(response){
+        return response.businesses;
     }
 
+function getYelpData(latitude, longitude, searchQuery) {
+    
+    function handleError(xhr, status, error) {
+        console.log('Error! Failed to retrieve data. ' + xhr.status + ' error');
+    }
 
+   
     // Enables cors anywhere
     // Code from: https://github.com/Rob--W/cors-anywhere
     jQuery.ajaxPrefilter(function(options) {
@@ -55,8 +60,8 @@ function getYelpData(latitude, longitude, searchQuery) {
     return $.ajax({
         type: "GET",
         url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`,
-        success: function(data) {
-            returnData(data);
+        success: function(response) {
+            return response;
         },
         error: handleError,
 
@@ -87,16 +92,38 @@ let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
 
 // generates initial map with search bar
 function initMapDestinationExplorer() {
-    map = generateNewMap();
+    // map = generateNewMap();
 }
 
 
+// Filter out unnecessary data and names 
+// latitude and longitude lat and lng. This is required
+// for google maps API to place markers 
+function retrieveRequiredYelpData(yelpData){
+    businesses = yelpData.businesses;
+    requiredYelpData = []
+    businesses.forEach(function(business){
+        let businessObject = {
+            name : business.name,
+            img  : business.image_url,
+            yelpPrice : business.price,
+            yelpRating : business.rating,
+            yelpPage:  business.url,
+            lat: business.coordinates.latitude,
+            lng: business.coordinates.longitude
+        };
+        requiredYelpData.push(businessObject);
+    });
+    
+    return requiredYelpData
+}
 
 
 $(".filter-btn").click(function() {
     toggleButtonActiveClass($(this));
     let searchString = getSearchString();
-    getYelpData(53.3498053, -6.260309, searchString).then(function(returnedData) {
-        console.log(returnedData);
+    getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
+        yelpData = retrieveRequiredYelpData(yelpResponse);
+        console.log(yelpData)
     });
 });
