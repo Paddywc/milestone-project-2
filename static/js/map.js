@@ -1,3 +1,9 @@
+// To avoid any other global variables
+let destinationExplorerData = {
+    map: "",
+    currentYelpData: [],
+};
+
 function toggleButtonActiveClass(button) {
     if ($(button).hasClass("disabled")) {
         $(button).removeClass("disabled");
@@ -46,9 +52,7 @@ function getYelpData(latitude, longitude, searchQuery) {
             options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
         }
     });
-
-    let url = `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`
-
+    let urlString = `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`;
 
     return $.ajax({
         type: "GET",
@@ -62,34 +66,30 @@ function getYelpData(latitude, longitude, searchQuery) {
             'authorization': 'Bearer UTSSHcFmhNyctmBOeWKD2eeg9GV_LRkqsdjDa3Q_WkwvGywmY0cxtFDWQt1ib4lgRiE1y9l0_uRPdU6O4fY1rn164iomb6Y7_wR9G-Ii3WPWScwM5UWBZaPSz3LCWnYx',
             'access-control-allow-origin': '*',
             'cache-control': 'no-cache',
-            'postman-token': 'c6fca5f7-e9ee-017f-8b66-d13a9884ec6d'
         },
         crossDomain: true
     });
 }
 
-// Generates new map
 // Initial center of map is Dublin city center
-// Sets it as window.map
 let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
-    
-        // Other than window.map, below block of code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-        window.map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: {
-                lat: latitude,
-                lng: longitude
-            },
-            mapTypeId: 'roadmap'
-        });
-        
-        return window.map;
+
+    // Other than destinationExplorerData.map, below block of code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
+    destinationExplorerData.map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 15,
+        center: {
+            lat: latitude,
+            lng: longitude
+        },
+        mapTypeId: 'roadmap'
+    });
+
+    return destinationExplorerData.map;
 };
 
 
 function initMapDestinationExplorer() {
     generateNewMap();
-
 }
 
 
@@ -104,6 +104,7 @@ function ifUndefinedReturnNA(valueToCheck) {
 
 
 // Filter out unnecessary data for yelp api
+// Creates google maps marker for each entry
 function retrieveRequiredYelpData(yelpData) {
     businesses = yelpData.businesses;
     requiredYelpData = []
@@ -116,33 +117,38 @@ function retrieveRequiredYelpData(yelpData) {
             yelpPrice: ifUndefinedReturnNA(business.price),
             yelpRating: business.rating,
             yelpPage: business.url,
-            lat: business.coordinates.latitude,
-            lng: business.coordinates.longitude
+            marker: new google.maps.Marker({
+                position: {
+                    lat: business.coordinates.latitude,
+                    lng: business.coordinates.longitude
+                }
+            })
         };
         i++;
         requiredYelpData.push(businessObject);
     });
 
+    destinationExplorerData.currentYelpData = requiredYelpData
+
     return requiredYelpData
 }
 
 
-function addLocationsToMap(yelpData) {
+
+function addMarkersToMap(map) {
 
     markersArray = []
+
+    yelpData = destinationExplorerData.currentYelpData
+
     for (let i = 0; i < yelpData.length; i++) {
-        marker = new google.maps.Marker({
-            position: {
-                lat: yelpData[i].lat,
-                lng: yelpData[i].lng
-            }
-        });
-        markersArray.push(marker);
+        markersArray.push(yelpData[i].marker);
     }
 
+    console.log(markersArray);
     // places markers on map
     // with markerCluster functionality
-    let markerCluster = new MarkerClusterer(window.map, markersArray, {
+    let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     });
 }
@@ -150,10 +156,13 @@ function addLocationsToMap(yelpData) {
 
 $(".filter-btn").click(function() {
     toggleButtonActiveClass($(this));
-    let searchString = getSearchString();
-    getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
-        let yelpData = retrieveRequiredYelpData(yelpResponse);
-        addLocationsToMap(yelpData, window.map);
-        
-    });
+    if ($(this).hasClass("active")) {
+        let searchString = getSearchString();
+        getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
+            console.log("this ran");
+            retrieveRequiredYelpData(yelpResponse);
+            addMarkersToMap(destinationExplorerData.map);
+        });
+    }
+
 });

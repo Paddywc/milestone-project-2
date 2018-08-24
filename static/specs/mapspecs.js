@@ -140,7 +140,7 @@
 //         expect(generateNewMap).toBeDefined();
 //     });
 
-//     it("should return the expected variable types", function() {
+//     it("should return a roadmap", function() {
 //         map = generateNewMap();
 //         expect(typeof map).toBe("object");
 //         expect(map.mapTypeId).toBe("roadmap");
@@ -166,10 +166,12 @@
 // });
 
 
-describe("addLocationsToMap function", function() {
+// describe("addMarkersToMap function", function() {
 
-    it("should exist", function() {
-        expect(addLocationsToMap).toBeDefined()
-    })
+//     it("should exist", function() {
+//         expect(addMarkersToMap).toBeDefined()
+//     })
 
-});
+// });
+
+
