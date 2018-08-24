@@ -149,6 +149,7 @@ function retrieveRequiredYelpData(yelpData) {
     let currentData = destinationExplorerData.currentYelpData;
     let currentAndNewData  = currentData.concat(requiredYelpData);
     destinationExplorerData.currentYelpData = currentAndNewData;
+    console.log(currentAndNewData);
     return currentAndNewData;
 }
 
