@@ -31,13 +31,6 @@ function getSearchString() {
     return searchString;
 }
 
-function returnData(data) {
-    return data;
-}
-
-function returnBusinessData(response) {
-    return response.businesses;
-}
 
 function getYelpData(latitude, longitude, searchQuery) {
 
@@ -75,28 +68,32 @@ function getYelpData(latitude, longitude, searchQuery) {
     });
 }
 
-// creates new map
-// initial center of map is Dublin city center
-// Code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
+// Generates new map
+// Initial center of map is Dublin city center
+// Sets it as window.map
 let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
-    return new google.maps.Map(document.getElementById('map'), {
-        zoom: 15,
-        center: {
-            lat: latitude,
-            lng: longitude
-        },
-        mapTypeId: 'roadmap'
-    });
+    
+        // Other than window.map, below block of code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
+        window.map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: {
+                lat: latitude,
+                lng: longitude
+            },
+            mapTypeId: 'roadmap'
+        });
+        
+        return window.map;
 };
 
 
-// generates initial map with search bar
 function initMapDestinationExplorer() {
-    // map = generateNewMap();
+    generateNewMap();
+
 }
 
 
- function ifUndefinedReturnNA (valueToCheck) {
+function ifUndefinedReturnNA(valueToCheck) {
     if (valueToCheck == null) {
         return 'N/A'
     }
@@ -106,14 +103,14 @@ function initMapDestinationExplorer() {
 }
 
 
-// Filter out unnecessary data and names 
-// latitude and longitude lat and lng. This is required
-// for google maps API to place markers 
+// Filter out unnecessary data for yelp api
 function retrieveRequiredYelpData(yelpData) {
     businesses = yelpData.businesses;
     requiredYelpData = []
+    let i = 0;
     businesses.forEach(function(business) {
         let businessObject = {
+            id: i,
             name: business.name,
             img: business.image_url,
             yelpPrice: ifUndefinedReturnNA(business.price),
@@ -122,6 +119,7 @@ function retrieveRequiredYelpData(yelpData) {
             lat: business.coordinates.latitude,
             lng: business.coordinates.longitude
         };
+        i++;
         requiredYelpData.push(businessObject);
     });
 
@@ -129,11 +127,33 @@ function retrieveRequiredYelpData(yelpData) {
 }
 
 
+function addLocationsToMap(yelpData) {
+
+    markersArray = []
+    for (let i = 0; i < yelpData.length; i++) {
+        marker = new google.maps.Marker({
+            position: {
+                lat: yelpData[i].lat,
+                lng: yelpData[i].lng
+            }
+        });
+        markersArray.push(marker);
+    }
+
+    // places markers on map
+    // with markerCluster functionality
+    let markerCluster = new MarkerClusterer(window.map, markersArray, {
+        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+    });
+}
+
+
 $(".filter-btn").click(function() {
     toggleButtonActiveClass($(this));
     let searchString = getSearchString();
     getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
-        yelpData = retrieveRequiredYelpData(yelpResponse);
-        console.log(yelpData)
+        let yelpData = retrieveRequiredYelpData(yelpResponse);
+        addLocationsToMap(yelpData, window.map);
+        
     });
 });

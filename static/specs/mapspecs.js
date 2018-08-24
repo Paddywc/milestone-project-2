@@ -54,15 +54,6 @@
 
 //     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-//     //enables testing of asynchronous functions
-//     // postpones running of 'it' functions 
-//     //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
-//     beforeEach(function(done) {
-//         setTimeout(function() {
-//             result = 'a different value';
-//             done();
-//         }, 9000);
-//     });
 
 //     var results;
 //     getYelpData(53.3498053, -6.260309, "food,bars").then(function(returnData) {
@@ -72,6 +63,15 @@
 //     it("Should exist", function() {
 //         expect(getYelpData).toBeDefined();
 //     });
+
+//     //enables testing of asynchronous functions
+//     //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+//     let delayFunctions = function(done) {
+//         setTimeout(function() {
+//             result = 'a different value';
+//             done();
+//         }, 9000);
+//     };
 
 //     it("Should return and object", function() {
 //         console.log(results)
@@ -86,20 +86,26 @@
 
 //     jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-//     //enables testing of asynchronous functions
-//     // postpones running of 'it' functions 
-//     //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
-//     beforeEach(function(done) {
-//         setTimeout(function() {
-//             result = 'a different value';
-//             done();
-//         }, 9000);
-//     });
 
 //     var yelpData
 
 //     getYelpData(53.3498053, -6.260309, "food,bar").then(function(yelpResponse) {
 //         yelpData = retrieveRequiredYelpData(yelpResponse);
+//     });
+
+
+
+//     //enables testing of asynchronous functions
+//     //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+//     let delayFunctions = function(done) {
+//         setTimeout(function() {
+//             result = 'a different value';
+//             done();
+//         }, 9000);
+//     };
+
+//     it("should exist", function() {
+//         expect(retrieveRequiredYelpData).toBeDefined();
 //     });
 
 //     it("should return variables of the expected type", function() {
@@ -110,9 +116,7 @@
 //         expect(yelpData[0].yelpPage).toContain("www.yelp.com");
 //     })
 
-//     it("should exist", function() {
-//         expect(retrieveRequiredYelpData).toBeDefined();
-//     });
+
 // })
 
 // describe('generateNewMap function', function() {
@@ -132,31 +136,40 @@
 
 
 
-//   it("should exist", function() {
-//     expect(generateNewMap).toBeDefined();
-//   });
+//     it("should exist", function() {
+//         expect(generateNewMap).toBeDefined();
+//     });
 
-//   it ("should return the expected variable types", function() {
-//       map = generateNewMap();
-//       expect(typeof map).toBe("object");
-//       expect(map.mapTypeId).toBe("roadmap");
-//   })
+//     it("should return the expected variable types", function() {
+//         map = generateNewMap();
+//         expect(typeof map).toBe("object");
+//         expect(map.mapTypeId).toBe("roadmap");
+//     })
 // });
 
-describe("ifUndefinedReturnNA function", function() {
-  it("should exist", function() {
-    expect(ifUndefinedReturnNA).toBeDefined();
-  });
+// describe("ifUndefinedReturnNA function", function() {
+//     it("should exist", function() {
+//         expect(ifUndefinedReturnNA).toBeDefined();
+//     });
 
-  let firstResult = ifUndefinedReturnNA(undefined);
-  it("should return 'N/A' when undefined entered  ", function() {
-    expect(firstResult).toBeDefined();
-    expect(firstResult).toBe('N/A');
-  });
+//     let firstResult = ifUndefinedReturnNA(undefined);
+//     it("should return 'N/A' when undefined entered  ", function() {
+//         expect(firstResult).toBeDefined();
+//         expect(firstResult).toBe('N/A');
+//     });
 
-  let definedArgument = "test argument";
-  let secondResult = ifUndefinedReturnNA(definedArgument);
-  it("should return argument if argument is not undefined ", function() {
-    expect(secondResult).toBe(definedArgument);
-  });
+//     let definedArgument = "test argument";
+//     let secondResult = ifUndefinedReturnNA(definedArgument);
+//     it("should return argument if argument is not undefined ", function() {
+//         expect(secondResult).toBe(definedArgument);
+//     });
+// });
+
+
+describe("addLocationsToMap function", function() {
+
+    it("should exist", function() {
+        expect(addLocationsToMap).toBeDefined()
+    })
+
 });
