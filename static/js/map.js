@@ -52,7 +52,6 @@ function getYelpData(latitude, longitude, searchQuery) {
             options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
         }
     });
-    let urlString = `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`;
 
     return $.ajax({
         type: "GET",
@@ -103,50 +102,69 @@ function ifUndefinedReturnNA(valueToCheck) {
 }
 
 
+function checkIfBusinessIsDuplicate(yelpBusiness) {
+    let existingBusinessIds = [];
+    let currentYelpData = destinationExplorerData.currentYelpData;
+
+    currentYelpData.forEach(function(business) {
+        existingBusinessIds.push(business.yelpId);
+    });
+    
+
+    if (existingBusinessIds.includes(yelpBusiness.id)) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 // Filter out unnecessary data for yelp api
 // Creates google maps marker for each entry
+// Doesn't add business that already exists in currentYelpData
 function retrieveRequiredYelpData(yelpData) {
-    businesses = yelpData.businesses;
-    requiredYelpData = []
-    let i = 0;
+    let businesses = yelpData.businesses;
+    let requiredYelpData = [];
     businesses.forEach(function(business) {
-        let businessObject = {
-            id: i,
-            name: business.name,
-            img: business.image_url,
-            yelpPrice: ifUndefinedReturnNA(business.price),
-            yelpRating: business.rating,
-            yelpPage: business.url,
-            marker: new google.maps.Marker({
-                position: {
-                    lat: business.coordinates.latitude,
-                    lng: business.coordinates.longitude
-                }
-            })
-        };
-        i++;
-        requiredYelpData.push(businessObject);
+
+        if (!checkIfBusinessIsDuplicate(business)) {
+            let businessObject = {
+                yelpId: business.id,
+                name: business.name,
+                img: business.image_url,
+                yelpPrice: ifUndefinedReturnNA(business.price),
+                yelpRating: business.rating,
+                yelpPage: business.url,
+                marker: new google.maps.Marker({
+                    position: {
+                        lat: business.coordinates.latitude,
+                        lng: business.coordinates.longitude
+                    }
+                })
+            };
+            requiredYelpData.push(businessObject);
+        }
     });
 
-    destinationExplorerData.currentYelpData = requiredYelpData
-
-    return requiredYelpData
+    let currentData = destinationExplorerData.currentYelpData;
+    let currentAndNewData  = currentData.concat(requiredYelpData);
+    destinationExplorerData.currentYelpData = currentAndNewData;
+    return currentAndNewData;
 }
 
 
 
 function addMarkersToMap(map) {
 
-    markersArray = []
+    let markersArray = [];
 
-    yelpData = destinationExplorerData.currentYelpData
-
+    let yelpData = destinationExplorerData.currentYelpData;
+  
     for (let i = 0; i < yelpData.length; i++) {
         markersArray.push(yelpData[i].marker);
     }
-
-    console.log(markersArray);
-    // places markers on map
+  
+    // Places markers on map
     // with markerCluster functionality
     let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
@@ -159,7 +177,6 @@ $(".filter-btn").click(function() {
     if ($(this).hasClass("active")) {
         let searchString = getSearchString();
         getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
-            console.log("this ran");
             retrieveRequiredYelpData(yelpResponse);
             addMarkersToMap(destinationExplorerData.map);
         });
