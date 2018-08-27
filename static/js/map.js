@@ -95,10 +95,10 @@ function initMapDestinationExplorer() {
 
 function ifUndefinedReturnNA(valueToCheck) {
     if (valueToCheck == null) {
-        return 'N/A'
+        return 'N/A';
     }
     else {
-        return valueToCheck
+        return valueToCheck;
     }
 }
 
@@ -152,115 +152,136 @@ function determineBusinessType(businessCategories) {
 }
 
 
-// Filter out unnecessary data for yelp api
-// Creates google maps marker for each entry
-// Doesn't add business that already exists in currentYelpData
-function retrieveRequiredYelpData(yelpData) {
-    let businesses = yelpData.businesses;
-    let requiredYelpData = [];
-    businesses.forEach(function(business) {
-
-        if (!checkIfBusinessIsDuplicate(business, destinationExplorerData.currentYelpData)) {
-            let businessObject = {
-                yelpId: business.id,
-                name: business.name,
-                categories: getBusinessCategories(business),
-                businessType: determineBusinessType(getBusinessCategories(business)),
-                img: business.image_url,
-                yelpPrice: ifUndefinedReturnNA(business.price),
-                yelpRating: business.rating,
-                yelpPage: business.url,
-                marker: new google.maps.Marker({
-                    position: {
-                        lat: business.coordinates.latitude,
-                        lng: business.coordinates.longitude
-                    }
-                })
-            };
-            requiredYelpData.push(businessObject);
-        }
-    });
-
-    let currentData = destinationExplorerData.currentYelpData;
-    let currentAndNewData = currentData.concat(requiredYelpData);
-    return currentAndNewData;
-}
-
-
-
-
-
-function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
-
-    let markersArray = [];
-
-    let yelpData = currentYelpData;
-
-    for (let i = 0; i < yelpData.length; i++) {
-        markersArray.push(yelpData[i].marker);
-    }
-    if (currentMarkerCluster.markers_.length > 0) {
-       currentMarkerCluster.clearMarkers();
-    }
-
-    // Places markers on map
-    // with markerCluster functionality
-    let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
-        imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-    });
-
-
-    return markerCluster;
-
-
-}
-
-
-
-function determineBusinesstypeToRemove(buttonPressed) {
-    let typeToRemove = "";
-
-    if ($(buttonPressed).is("#food-drink-btn")) {
-        typeToRemove = "foodAndDrink";
-    }
-    else if ($(buttonPressed).is("#accommodation-btn")) {
-        typeToRemove = "accommodation";
-    }
-    else {
-        typeToRemove = "activities";
-    }
-    return typeToRemove;
-}
-
-
-function removeYelpData(yelpData, typeToRemove) {
+function determineIconToUse(yelpBusiness) {
     
-    for (let i = 0; i < yelpData.length; i++) {
-        if (yelpData[i].businessType === typeToRemove) {
-            yelpData.splice(i, 1);
-            i--;
-        }
+    
+     // icons to appear as markers on map
+    let foodIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC'
+    let activitiesIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII='
+    let accommodationIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg=='
+
+    let businessType = determineBusinessType(getBusinessCategories(yelpBusiness));
+    
+    if (businessType === "foodAndDrink"){
+        return foodIcon;
+    }else if (businessType === "accommodation" ){
+        return  accommodationIcon;
+    }else {
+        return activitiesIcon;
     }
-    return yelpData;
-}
 
+    }
 
+    // Filter out unnecessary data for yelp api
+    // Creates google maps marker for each entry
+    // Doesn't add business that already exists in currentYelpData
+    function retrieveRequiredYelpData(yelpData) {
+        let businesses = yelpData.businesses;
+        let requiredYelpData = [];
+        businesses.forEach(function(business) {
 
-$(".filter-btn").click(function() {
-    toggleButtonActiveClass($(this));
-    if ($(this).hasClass("active")) {
-        let searchString = getSearchString();
-        getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
-            destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
-            destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster,  destinationExplorerData.map);
+            if (!checkIfBusinessIsDuplicate(business, destinationExplorerData.currentYelpData)) {
+                let businessObject = {
+                    yelpId: business.id,
+                    name: business.name,
+                    categories: getBusinessCategories(business),
+                    businessType: determineBusinessType(getBusinessCategories(business)),
+                    img: business.image_url,
+                    yelpPrice: ifUndefinedReturnNA(business.price),
+                    yelpRating: business.rating,
+                    yelpPage: business.url,
+                    marker: new google.maps.Marker({
+                        position: {
+                            lat: business.coordinates.latitude,
+                            lng: business.coordinates.longitude
+                        },
+                        icon : determineIconToUse(business)
+                    })
+                };
+                requiredYelpData.push(businessObject);
+            }
         });
+
+        let currentData = destinationExplorerData.currentYelpData;
+        let currentAndNewData = currentData.concat(requiredYelpData);
+        return currentAndNewData;
     }
-    else {
-        let typeToRemove = determineBusinesstypeToRemove($(this));
-        destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
-        destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+
+
+
+
+
+    function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
+
+        let markersArray = [];
+
+        let yelpData = currentYelpData;
+
+        for (let i = 0; i < yelpData.length; i++) {
+            markersArray.push(yelpData[i].marker);
+        }
+        if (currentMarkerCluster.markers_.length > 0) {
+            currentMarkerCluster.clearMarkers();
+        }
+
+        // Places markers on map
+        // with markerCluster functionality
+        let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
+            imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+        });
+
+
+        return markerCluster;
+
+
     }
 
 
 
-});
+    function determineBusinesstypeToRemove(buttonPressed) {
+        let typeToRemove = "";
+
+        if ($(buttonPressed).is("#food-drink-btn")) {
+            typeToRemove = "foodAndDrink";
+        }
+        else if ($(buttonPressed).is("#accommodation-btn")) {
+            typeToRemove = "accommodation";
+        }
+        else {
+            typeToRemove = "activities";
+        }
+        return typeToRemove;
+    }
+
+
+    function removeYelpData(yelpData, typeToRemove) {
+
+        for (let i = 0; i < yelpData.length; i++) {
+            if (yelpData[i].businessType === typeToRemove) {
+                yelpData.splice(i, 1);
+                i--;
+            }
+        }
+        return yelpData;
+    }
+
+
+
+    $(".filter-btn").click(function() {
+        toggleButtonActiveClass($(this));
+        if ($(this).hasClass("active")) {
+            let searchString = getSearchString();
+            getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
+                destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
+                destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+            });
+        }
+        else {
+            let typeToRemove = determineBusinesstypeToRemove($(this));
+            destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
+            destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+        }
+
+
+
+    });
