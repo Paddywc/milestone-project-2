@@ -109,7 +109,7 @@ function checkIfBusinessIsDuplicate(yelpBusiness) {
     currentYelpData.forEach(function(business) {
         existingBusinessIds.push(business.yelpId);
     });
-    
+
 
     if (existingBusinessIds.includes(yelpBusiness.id)) {
         return true;
@@ -118,6 +118,38 @@ function checkIfBusinessIsDuplicate(yelpBusiness) {
         return false;
     }
 }
+
+
+function getBusinessCategories(yelpBusiness) {
+    let businessCategories  = yelpBusiness.categories;
+    let categoriesArray = [];
+    for (let i = 0; i < businessCategories.length; i++) {
+        categoriesArray.push(businessCategories[i].title);
+    }
+    return categoriesArray;
+}
+
+function determineBusinessType(businessCategories){
+    
+    
+
+    // Subcategories retrieved from yelp using filter terms from getSearchString
+    // Data from: https://www.yelp.com/developers/documentation/v3/all_category_list
+    let foodAndDrink = ['Acai Bowls', 'Backshop', 'Bagels', 'Bakeries', 'Beer, Wine & Spirits', 'Bento', 'Beverage Store', 'Breweries', 'Bubble Tea', 'Butcher', 'CSA', 'Chimney Cakes', 'Churros', 'Cideries', 'Coffee & Tea', 'Coffee & Tea Supplies', 'Coffee Roasteries', 'Convenience Stores', 'Cupcakes', 'Custom Cakes', 'Delicatessen', 'Desserts', 'Distilleries', 'Do-It-Yourself Food', 'Donairs', 'Donuts', 'Empanadas', 'Ethical Grocery', 'Farmers Market', 'Fishmonger', 'Food Delivery Services', 'Food Trucks', 'Friterie', 'Gelato', 'Grocery', 'Hawker Centre', 'Honey', 'Ice Cream & Frozen Yogurt', 'Imported Food', 'International Grocery', 'Internet Cafes', 'Japanese Sweets', 'Juice Bars & Smoothies', 'Kiosk', 'Kombucha', 'Milkshake Bars', 'Mulled Wine', 'Nasi Lemak', 'Organic Stores', 'Panzerotti', 'Parent Cafes', 'Patisserie/Cake Shop', 'Piadina', 'Poke', 'Pretzels', 'Salumerie', 'Shaved Ice', 'Shaved Snow', 'Smokehouse', 'Specialty Food', 'Candy Stores', 'Cheese Shops', 'Chocolatiers & Shops', 'Dagashi', 'Dried Fruit', 'Frozen Food', 'Fruits & Veggies', 'Health Markets', 'Herbs & Spices', 'Macarons', 'Meat Shops', 'Olive Oil', 'Pasta Shops', 'Popcorn Shops', 'Seafood Markets', 'Tofu Shops', 'Street Vendors', 'Sugar Shacks', 'Tea Rooms', 'Torshi', 'Tortillas', 'Water Stores', 'Wineries', 'Wine Tasting Room', 'Zapiekanka', 'BarsxxAbsinthe Bars', 'Airport Lounges', 'Beach Bars', 'Beer Bar', 'Champagne Bars', 'Cigar Bars', 'Cocktail Bars', 'Dive Bars', 'Drive-Thru Bars', 'Gay Bars', 'Hookah Bars', 'Hotel bar', 'Irish Pub', 'Lounges', 'Pubs', 'Pulquerias', 'Sake Bars', 'Speakeasies', 'Sports Bars', 'Tabac', 'Tiki Bars', 'Vermouth Bars', 'Whiskey Bars', 'Wine Bars']
+    
+    let accommodation = ['Guest Houses', 'Hostels', 'Hotels', 'Agriturismi', 'Mountain Huts', 'Pensions', 'Residences', 'Rest Stops', 'Ryokan', 'Campgrounds']
+    
+    for(let i = 0; i < businessCategories.length; i++){
+        
+        if (foodAndDrink.includes(businessCategories[i])){
+            return "foodAndDrink"
+        }else if (accommodation.includes(businessCategories[i])){
+            return "accommodation"
+        }
+    }
+    return "activities"
+}
+
 
 // Filter out unnecessary data for yelp api
 // Creates google maps marker for each entry
@@ -131,6 +163,8 @@ function retrieveRequiredYelpData(yelpData) {
             let businessObject = {
                 yelpId: business.id,
                 name: business.name,
+                categories: getBusinessCategories(business),
+                businessType : determineBusinessType(getBusinessCategories(business)),
                 img: business.image_url,
                 yelpPrice: ifUndefinedReturnNA(business.price),
                 yelpRating: business.rating,
@@ -147,9 +181,8 @@ function retrieveRequiredYelpData(yelpData) {
     });
 
     let currentData = destinationExplorerData.currentYelpData;
-    let currentAndNewData  = currentData.concat(requiredYelpData);
+    let currentAndNewData = currentData.concat(requiredYelpData);
     destinationExplorerData.currentYelpData = currentAndNewData;
-    console.log(currentAndNewData);
     return currentAndNewData;
 }
 
@@ -160,11 +193,11 @@ function addMarkersToMap(map) {
     let markersArray = [];
 
     let yelpData = destinationExplorerData.currentYelpData;
-  
+
     for (let i = 0; i < yelpData.length; i++) {
         markersArray.push(yelpData[i].marker);
     }
-  
+
     // Places markers on map
     // with markerCluster functionality
     let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
