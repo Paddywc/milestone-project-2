@@ -2,6 +2,7 @@
 let destinationExplorerData = {
     map: "",
     currentYelpData: [],
+    markerCluster: { markers_: [], clusters_: [] }
 };
 
 function toggleButtonActiveClass(button) {
@@ -73,8 +74,8 @@ function getYelpData(latitude, longitude, searchQuery) {
 // Initial center of map is Dublin city center
 let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
 
-    // Other than destinationExplorerData.map, below block of code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-    destinationExplorerData.map = new google.maps.Map(document.getElementById('map'), {
+    //   Code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
+    let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
         center: {
             lat: latitude,
@@ -83,12 +84,12 @@ let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
         mapTypeId: 'roadmap'
     });
 
-    return destinationExplorerData.map;
+    return map;
 };
 
 
 function initMapDestinationExplorer() {
-    generateNewMap();
+    destinationExplorerData.map = generateNewMap();
 }
 
 
@@ -102,11 +103,10 @@ function ifUndefinedReturnNA(valueToCheck) {
 }
 
 
-function checkIfBusinessIsDuplicate(yelpBusiness) {
+function checkIfBusinessIsDuplicate(yelpBusiness, yelpData) {
     let existingBusinessIds = [];
-    let currentYelpData = destinationExplorerData.currentYelpData;
 
-    currentYelpData.forEach(function(business) {
+    yelpData.forEach(function(business) {
         existingBusinessIds.push(business.yelpId);
     });
 
@@ -121,7 +121,7 @@ function checkIfBusinessIsDuplicate(yelpBusiness) {
 
 
 function getBusinessCategories(yelpBusiness) {
-    let businessCategories  = yelpBusiness.categories;
+    let businessCategories = yelpBusiness.categories;
     let categoriesArray = [];
     for (let i = 0; i < businessCategories.length; i++) {
         categoriesArray.push(businessCategories[i].title);
@@ -129,25 +129,26 @@ function getBusinessCategories(yelpBusiness) {
     return categoriesArray;
 }
 
-function determineBusinessType(businessCategories){
-    
-    
+function determineBusinessType(businessCategories) {
+
+
 
     // Subcategories retrieved from yelp using filter terms from getSearchString
     // Data from: https://www.yelp.com/developers/documentation/v3/all_category_list
-    let foodAndDrink = ['Acai Bowls', 'Backshop', 'Bagels', 'Bakeries', 'Beer, Wine & Spirits', 'Bento', 'Beverage Store', 'Breweries', 'Bubble Tea', 'Butcher', 'CSA', 'Chimney Cakes', 'Churros', 'Cideries', 'Coffee & Tea', 'Coffee & Tea Supplies', 'Coffee Roasteries', 'Convenience Stores', 'Cupcakes', 'Custom Cakes', 'Delicatessen', 'Desserts', 'Distilleries', 'Do-It-Yourself Food', 'Donairs', 'Donuts', 'Empanadas', 'Ethical Grocery', 'Farmers Market', 'Fishmonger', 'Food Delivery Services', 'Food Trucks', 'Friterie', 'Gelato', 'Grocery', 'Hawker Centre', 'Honey', 'Ice Cream & Frozen Yogurt', 'Imported Food', 'International Grocery', 'Internet Cafes', 'Japanese Sweets', 'Juice Bars & Smoothies', 'Kiosk', 'Kombucha', 'Milkshake Bars', 'Mulled Wine', 'Nasi Lemak', 'Organic Stores', 'Panzerotti', 'Parent Cafes', 'Patisserie/Cake Shop', 'Piadina', 'Poke', 'Pretzels', 'Salumerie', 'Shaved Ice', 'Shaved Snow', 'Smokehouse', 'Specialty Food', 'Candy Stores', 'Cheese Shops', 'Chocolatiers & Shops', 'Dagashi', 'Dried Fruit', 'Frozen Food', 'Fruits & Veggies', 'Health Markets', 'Herbs & Spices', 'Macarons', 'Meat Shops', 'Olive Oil', 'Pasta Shops', 'Popcorn Shops', 'Seafood Markets', 'Tofu Shops', 'Street Vendors', 'Sugar Shacks', 'Tea Rooms', 'Torshi', 'Tortillas', 'Water Stores', 'Wineries', 'Wine Tasting Room', 'Zapiekanka', 'BarsxxAbsinthe Bars', 'Airport Lounges', 'Beach Bars', 'Beer Bar', 'Champagne Bars', 'Cigar Bars', 'Cocktail Bars', 'Dive Bars', 'Drive-Thru Bars', 'Gay Bars', 'Hookah Bars', 'Hotel bar', 'Irish Pub', 'Lounges', 'Pubs', 'Pulquerias', 'Sake Bars', 'Speakeasies', 'Sports Bars', 'Tabac', 'Tiki Bars', 'Vermouth Bars', 'Whiskey Bars', 'Wine Bars']
-    
-    let accommodation = ['Guest Houses', 'Hostels', 'Hotels', 'Agriturismi', 'Mountain Huts', 'Pensions', 'Residences', 'Rest Stops', 'Ryokan', 'Campgrounds']
-    
-    for(let i = 0; i < businessCategories.length; i++){
-        
-        if (foodAndDrink.includes(businessCategories[i])){
-            return "foodAndDrink"
-        }else if (accommodation.includes(businessCategories[i])){
-            return "accommodation"
+    let foodAndDrink = ['Acai Bowls', 'Backshop', 'Bagels', 'Bakeries', 'Beer, Wine & Spirits', 'Bento', 'Beverage Store', 'Breweries', 'Bubble Tea', 'Butcher', 'CSA', 'Chimney Cakes', 'Churros', 'Cideries', 'Coffee & Tea', 'Coffee & Tea Supplies', 'Coffee Roasteries', 'Convenience Stores', 'Cupcakes', 'Custom Cakes', 'Delicatessen', 'Desserts', 'Distilleries', 'Do-It-Yourself Food', 'Donairs', 'Donuts', 'Empanadas', 'Ethical Grocery', 'Farmers Market', 'Fishmonger', 'Food Delivery Services', 'Food Trucks', 'Friterie', 'Gelato', 'Grocery', 'Hawker Centre', 'Honey', 'Ice Cream & Frozen Yogurt', 'Imported Food', 'International Grocery', 'Internet Cafes', 'Japanese Sweets', 'Juice Bars & Smoothies', 'Kiosk', 'Kombucha', 'Milkshake Bars', 'Mulled Wine', 'Nasi Lemak', 'Organic Stores', 'Panzerotti', 'Parent Cafes', 'Patisserie/Cake Shop', 'Piadina', 'Poke', 'Pretzels', 'Salumerie', 'Shaved Ice', 'Shaved Snow', 'Smokehouse', 'Specialty Food', 'Candy Stores', 'Cheese Shops', 'Chocolatiers & Shops', 'Dagashi', 'Dried Fruit', 'Frozen Food', 'Fruits & Veggies', 'Health Markets', 'Herbs & Spices', 'Macarons', 'Meat Shops', 'Olive Oil', 'Pasta Shops', 'Popcorn Shops', 'Seafood Markets', 'Tofu Shops', 'Street Vendors', 'Sugar Shacks', 'Tea Rooms', 'Torshi', 'Tortillas', 'Water Stores', 'Wineries', 'Wine Tasting Room', 'Zapiekanka', 'BarsxxAbsinthe Bars', 'Airport Lounges', 'Beach Bars', 'Beer Bar', 'Champagne Bars', 'Cigar Bars', 'Cocktail Bars', 'Dive Bars', 'Drive-Thru Bars', 'Gay Bars', 'Hookah Bars', 'Hotel bar', 'Irish Pub', 'Lounges', 'Pubs', 'Pulquerias', 'Sake Bars', 'Speakeasies', 'Sports Bars', 'Tabac', 'Tiki Bars', 'Vermouth Bars', 'Whiskey Bars', 'Wine Bars'];
+
+    let accommodation = ['Guest Houses', 'Hostels', 'Hotels', 'Agriturismi', 'Mountain Huts', 'Pensions', 'Residences', 'Rest Stops', 'Ryokan', 'Campgrounds'];
+
+    for (let i = 0; i < businessCategories.length; i++) {
+
+        if (foodAndDrink.includes(businessCategories[i])) {
+            return "foodAndDrink";
+        }
+        else if (accommodation.includes(businessCategories[i])) {
+            return "accommodation";
         }
     }
-    return "activities"
+    return "activities";
 }
 
 
@@ -159,12 +160,12 @@ function retrieveRequiredYelpData(yelpData) {
     let requiredYelpData = [];
     businesses.forEach(function(business) {
 
-        if (!checkIfBusinessIsDuplicate(business)) {
+        if (!checkIfBusinessIsDuplicate(business, destinationExplorerData.currentYelpData)) {
             let businessObject = {
                 yelpId: business.id,
                 name: business.name,
                 categories: getBusinessCategories(business),
-                businessType : determineBusinessType(getBusinessCategories(business)),
+                businessType: determineBusinessType(getBusinessCategories(business)),
                 img: business.image_url,
                 yelpPrice: ifUndefinedReturnNA(business.price),
                 yelpRating: business.rating,
@@ -182,20 +183,24 @@ function retrieveRequiredYelpData(yelpData) {
 
     let currentData = destinationExplorerData.currentYelpData;
     let currentAndNewData = currentData.concat(requiredYelpData);
-    destinationExplorerData.currentYelpData = currentAndNewData;
     return currentAndNewData;
 }
 
 
 
-function addMarkersToMap(map) {
+
+
+function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
 
     let markersArray = [];
 
-    let yelpData = destinationExplorerData.currentYelpData;
+    let yelpData = currentYelpData;
 
     for (let i = 0; i < yelpData.length; i++) {
         markersArray.push(yelpData[i].marker);
+    }
+    if (currentMarkerCluster.markers_.length > 0) {
+       currentMarkerCluster.clearMarkers();
     }
 
     // Places markers on map
@@ -203,7 +208,42 @@ function addMarkersToMap(map) {
     let markerCluster = new MarkerClusterer(destinationExplorerData.map, markersArray, {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     });
+
+
+    return markerCluster;
+
+
 }
+
+
+
+function determineBusinesstypeToRemove(buttonPressed) {
+    let typeToRemove = "";
+
+    if ($(buttonPressed).is("#food-drink-btn")) {
+        typeToRemove = "foodAndDrink";
+    }
+    else if ($(buttonPressed).is("#accommodation-btn")) {
+        typeToRemove = "accommodation";
+    }
+    else {
+        typeToRemove = "activities";
+    }
+    return typeToRemove;
+}
+
+
+function removeYelpData(yelpData, typeToRemove) {
+    
+    for (let i = 0; i < yelpData.length; i++) {
+        if (yelpData[i].businessType === typeToRemove) {
+            yelpData.splice(i, 1);
+            i--;
+        }
+    }
+    return yelpData;
+}
+
 
 
 $(".filter-btn").click(function() {
@@ -211,9 +251,16 @@ $(".filter-btn").click(function() {
     if ($(this).hasClass("active")) {
         let searchString = getSearchString();
         getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
-            retrieveRequiredYelpData(yelpResponse);
-            addMarkersToMap(destinationExplorerData.map);
+            destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
+            destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster,  destinationExplorerData.map);
         });
     }
+    else {
+        let typeToRemove = determineBusinesstypeToRemove($(this));
+        destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
+        destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+    }
+
+
 
 });

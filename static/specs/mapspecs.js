@@ -20,6 +20,8 @@ describe('toggleButtonActiveClass function', function() {
 
 describe('getSearchString function', function() {
 
+
+
     afterEach(function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
     })
@@ -65,7 +67,7 @@ describe('getYelpData function', function() {
         setTimeout(function() {
             result = 'a different value';
             done();
-        }, 1000);
+        }, 3000);
     });
 
 
@@ -93,24 +95,10 @@ describe('getYelpData function', function() {
 
 describe("retrieveRequiredYelpData function", function() {
 
-    beforeEach(function() {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
-    });
 
-
-    //enables testing of asynchronous functions
-    // postpones running of 'it' functions 
-    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
-    beforeEach(function(done) {
-        setTimeout(function() {
-            result = 'a different value';
-            done();
-        }, 9000);
-    });
-
-
-    destinationExplorerData = { currentYelpData: [] };
-
+    it("should exist", function() {
+        expect(retrieveRequiredYelpData).toBeDefined();
+    })
     let sampleYelpApiresponse = {
         "businesses": [{
                 "id": "rKvPQZcgjrQOLRU0phPoAQ",
@@ -313,16 +301,14 @@ describe("retrieveRequiredYelpData function", function() {
 
 
 
-    it("should add its returned data to currentYelpData", function() {
-        expect(destinationExplorerData.currentYelpData[1].yelpId).toBe(yelpData[1].yelpId);
-    });
+
 
 });
 
 describe('generateNewMap function', function() {
 
 
-  
+
     beforeEach(function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     });
@@ -340,8 +326,7 @@ describe('generateNewMap function', function() {
 
     let returnedMap = generateNewMap();
 
-    destinationExplorerData.map = "";
-    
+
     it("should exist", function() {
         expect(generateNewMap).toBeDefined();
     });
@@ -385,16 +370,10 @@ describe("checkIfBusinessIsDuplicate function", function() {
         expect(checkIfBusinessIsDuplicate).toBeDefined();
     });
 
-    beforeEach(function() {
-        destinationExplorerData = { currentYelpData: [{ yelpId: "THf6siLJPYk5NqzkNSymfQ" }] };
-    })
-    afterEach(function() {
-        destinationExplorerData = { currentYelpData: [] };
-
-    })
 
 
 
+    let currentYelpData = [{ yelpId: "THf6siLJPYk5NqzkNSymfQ" }];
 
     let duplicateEntry = {
         id: "THf6siLJPYk5NqzkNSymfQ"
@@ -404,16 +383,14 @@ describe("checkIfBusinessIsDuplicate function", function() {
     };
 
     it("should return true if the argument business id already exists in currentYelpData", function() {
-        expect(checkIfBusinessIsDuplicate(duplicateEntry)).toBe(true);
+        expect(checkIfBusinessIsDuplicate(duplicateEntry, currentYelpData)).toBe(true);
     });
 
     it("should return false if the argument business id does NOT already exist in currentYelpData", function() {
-        expect(checkIfBusinessIsDuplicate(nonDuplicateEntry)).toBe(false);
+        expect(checkIfBusinessIsDuplicate(nonDuplicateEntry, currentYelpData)).toBe(false);
     });
-
-    destinationExplorerData = { currentYelpData: [] };
-
 });
+
 
 describe("getBusinessCategories function", function() {
 
@@ -624,3 +601,36 @@ describe("determineBusinessType function", function() {
         expect(determineBusinessType(sampleActivityCategories)).toBe("activities");
     });
 });
+
+describe("removeYelpData function", function() {
+
+    it("should exist", function() {
+        expect(removeYelpData).toBeDefined();
+    })
+
+    let currentYelpData = [
+        { businessType: "foodAndDrink" },
+        { businessType: "foodAndDrink" },
+        { businessType: "activities" },
+        { businessType: "foodAndDrink" },
+        { businessType: "foodAndDrink" },
+        { businessType: "accommodation" },
+        { businessType: "foodAndDrink" },
+        { businessType: "activities" },
+        { businessType: "activities" },
+    ];
+
+    let remainingBusinessTypes = [];
+
+    it("should remove businesses of its argument business type from destinationExplorerData.currentYelpData", function() {
+        currentYelpData = removeYelpData(currentYelpData, "activities");
+        currentYelpData.forEach(function(business) {
+            remainingBusinessTypes.push(business.businessType);
+        });
+        expect(remainingBusinessTypes.includes("activities")).toBe(false);
+        expect(remainingBusinessTypes.includes("foodAndDrink")).toBe(true);
+
+
+    })
+
+})
