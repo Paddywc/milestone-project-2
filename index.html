@@ -34,10 +34,23 @@
     <main>
         <div class="container-fluid">
             <div class="row">
+                <button type="button" id="search-btn" class="btn hide btn-outline-warning">Search this Area</button>
 
                 <!--map-->
                 <div class="col-xs-12 col-sm-9" id="map-col">
+                    <!--Alerts from bootstrap documentation https://getbootstrap.com/docs/4.0/components/alerts/-->
                     <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                    <div class="alert alert-info hide" id="searching-alert" role="alert">
+                        Searching...
+                    </div>
+                    <div class="alert alert-success hide" role="alert" id="search-complete-alert">
+                        Search complete!
+                    </div>
+                    <div class="alert alert-danger  hide" role="alert" id="search-error-alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+                    </div>
                     <div id="map"></div>
                 </div>
 
@@ -61,7 +74,7 @@
     </script>
 
     <!--Tests-->
-    <script type="text/javascript" src="/static/specs/mapspecs.js"></script>
+    <!--<script type="text/javascript" src="/static/specs/mapspecs.js"></script>-->
 
 </body>
 

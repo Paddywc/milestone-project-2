@@ -67,7 +67,7 @@ describe('getYelpData function', function() {
         setTimeout(function() {
             result = 'a different value';
             done();
-        }, 3000);
+        }, 5000);
     });
 
 
@@ -541,6 +541,22 @@ describe("determineBusinessTypes function", function() {
     });
 });
 
+describe("getMapCenter function", function() {
+    
+    it("should exist", function(){
+          expect(getMapCenter).toBeDefined();
+    });
+   
+  it ("should return the lat and lng of the argument map", function(){
+      let map = generateNewMap(42.23398053, -4.3303097000000434);
+      mapCenter = getMapCenter(map);
+      expect(mapCenter.lat).toBe(42.23398053);
+      expect(mapCenter.lng).toBe(-4.3303097000000434);
+         
+  }); 
+    
+});
+
 describe("removeYelpData function", function() {
 
     it("should exist", function() {
@@ -573,3 +589,5 @@ describe("removeYelpData function", function() {
     });
 
 });
+
+

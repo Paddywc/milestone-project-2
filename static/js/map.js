@@ -2,7 +2,8 @@
 let destinationExplorerData = {
     map: "",
     currentYelpData: [],
-    markerCluster: { markers_: [], clusters_: [] }
+    markerCluster: { markers_: [], clusters_: [] },
+    numberOfCallsRunning: 0
 };
 
 function toggleButtonActiveClass(button) {
@@ -39,12 +40,40 @@ function getSearchString() {
 }
 
 
+function displaySearchingToUser() {
+    destinationExplorerData.numberOfCallsRunning++;
+    $("#searching-alert").removeClass("hide");
+}
+
+
+function displaySearchErrorToUser(errorMessage) {
+    $("#searching-alert").addClass("hide");
+    $("#search-error-alert").prepend(errorMessage).removeClass("hide");
+}
+
+function displaySearchCompletedToUser() {
+    destinationExplorerData.numberOfCallsRunning--;
+    if (destinationExplorerData.numberOfCallsRunning === 0) {
+        $("#searching-alert").addClass("hide")
+        $("#search-complete-alert").removeClass("hide")
+        setTimeout(function() {
+            $("#search-complete-alert").addClass("hide");
+        }, 3000);
+    }
+}
+
+
 function getYelpData(latitude, longitude, searchQuery) {
 
-    function handleError(xhr, status, error) {
-        console.log('Error! Failed to retrieve data. ' + xhr.status + ' error');
-    }
 
+    displaySearchingToUser();
+
+
+    function handleError(xhr, status, error) {
+        let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error'
+        displaySearchErrorToUser(errorMessage)
+        console.log(errorMessage);
+    }
 
     // Enables cors anywhere
     // Code from: https://github.com/Rob--W/cors-anywhere
@@ -58,6 +87,7 @@ function getYelpData(latitude, longitude, searchQuery) {
         type: "GET",
         url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`,
         success: function(response) {
+            displaySearchCompletedToUser();
             return response;
         },
         error: handleError,
@@ -88,9 +118,6 @@ let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
 };
 
 
-function initMapDestinationExplorer() {
-    destinationExplorerData.map = generateNewMap();
-}
 
 
 function ifUndefinedReturnNA(valueToCheck) {
@@ -293,10 +320,7 @@ function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
         imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
     });
 
-
     return markerCluster;
-
-
 }
 
 
@@ -326,7 +350,8 @@ function checkIfOtherValidCategories(business) {
         }
         else if (businessType === "foodAndDrink") {
             return $("#food-drink-btn").hasClass("active")
-        }else if (businessType === "activities") {
+        }
+        else if (businessType === "activities") {
             return $("#activities-btn").hasClass("active")
         }
         else {
@@ -368,20 +393,67 @@ function removeYelpData(yelpData, typeToRemove) {
     return yelpData;
 }
 
+function getMapCenter(map) {
+
+    let center = map.getCenter();
+
+    return {
+        center: center,
+        lat: center.lat(),
+        lng: center.lng()
+    };
+}
 
 
-$(".filter-btn").click(function() {
-    toggleButtonActiveClass($(this));
-    if ($(this).hasClass("active")) {
-        let searchString = getSearchString();
-        getYelpData(53.3498053, -6.260309, searchString).then(function(yelpResponse) {
+
+function addDataAndUpdateMap() {
+    let searchString = getSearchString();
+    // If at least one filter button is active
+    if (searchString != "") {
+        let mapCenter = getMapCenter(destinationExplorerData.map);
+        getYelpData(mapCenter.lat, mapCenter.lng, searchString).then(function(yelpResponse) {
             destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
             destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
         });
     }
+}
+
+function removeDataAndUpdateMap(typeToRemove) {
+    destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
+    destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+}
+
+$(".filter-btn").click(function() {
+    toggleButtonActiveClass($(this));
+    if ($(this).hasClass("active")) {
+        addDataAndUpdateMap();
+    }
     else {
         let typeToRemove = determineBusinessTypesToRemove($(this));
-        destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
-        destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+        removeDataAndUpdateMap(typeToRemove);
     }
 });
+
+function showSearchButton() {
+    $("#search-btn").removeClass("hide")
+}
+
+function hideSearchButton() {
+    $("#search-btn").addClass("hide")
+}
+
+$("#search-btn").click(function() {
+    hideSearchButton();
+    addDataAndUpdateMap();
+});
+
+
+function initMapDestinationExplorer() {
+    destinationExplorerData.map = generateNewMap();
+    destinationExplorerData.map.addListener('idle', function() {
+        //   addDataAndUpdateMap()  
+        if ($(".filter-btn").hasClass("active")) {
+            showSearchButton();
+        }
+    });
+};
