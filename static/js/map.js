@@ -85,9 +85,10 @@ function getYelpData(latitude, longitude, searchQuery) {
 
     return $.ajax({
         type: "GET",
-        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&categories=${searchQuery}`,
+        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
         success: function(response) {
             displaySearchCompletedToUser();
+            console.log(response)
             return response;
         },
         error: handleError,
@@ -404,6 +405,14 @@ function getMapCenter(map) {
     };
 }
 
+function showSearchButton() {
+    $("#search-btn").removeClass("hide")
+}
+
+function hideSearchButton() {
+    $("#search-btn").addClass("hide")
+}
+
 
 
 function addDataAndUpdateMap() {
@@ -424,6 +433,7 @@ function removeDataAndUpdateMap(typeToRemove) {
 }
 
 $(".filter-btn").click(function() {
+    hideSearchButton();
     toggleButtonActiveClass($(this));
     if ($(this).hasClass("active")) {
         addDataAndUpdateMap();
@@ -434,13 +444,6 @@ $(".filter-btn").click(function() {
     }
 });
 
-function showSearchButton() {
-    $("#search-btn").removeClass("hide")
-}
-
-function hideSearchButton() {
-    $("#search-btn").addClass("hide")
-}
 
 $("#search-btn").click(function() {
     hideSearchButton();
