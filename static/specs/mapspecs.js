@@ -455,150 +455,89 @@ describe("getBusinessCategories function", function() {
     })
 });
 
-describe("determineBusinessType function", function() {
+describe("determineBusinessTypes function", function() {
+
+    beforeEach(function() {
+        $(".filter-btn").removeClass("active").addClass("disabled");
+    });
 
     it("should exist", function() {
-        expect(determineBusinessType).toBeDefined()
+        expect(determineBusinessTypes).toBeDefined()
     });
 
 
-    let samepleFoodAndDrink = {
-        "id": "feOIcCabfwn6PIK4KDwJog",
-        "alias": "fallon-and-byrne-dublin-2",
-        "name": "Fallon & Byrne",
-        "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/Pd5_A-GFmvytWnmd-BlPmQ/o.jpg",
-        "is_closed": false,
-        "url": "https://www.yelp.com/biz/fallon-and-byrne-dublin-2?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-        "review_count": 220,
-        "categories": [{
-                "alias": "delis",
-                "title": "Delis"
-            },
-            {
-                "alias": "wine_bars",
-                "title": "Wine Bars"
-            },
-            {
-                "alias": "irish",
-                "title": "Irish"
-            }
-        ],
-        "rating": 4,
-        "coordinates": {
-            "latitude": 53.343141198853,
-            "longitude": -6.26336171749372
-        },
-        "transactions": [],
-        "price": "€€€",
-        "location": {
-            "address1": "11-17 Exchequer Street",
-            "address2": "",
-            "address3": "",
-            "city": "Dublin",
-            "zip_code": "2",
-            "country": "IE",
-            "state": "D",
-            "display_address": [
-                "11-17 Exchequer Street",
-                "Dublin 2",
-                "Republic of Ireland"
+    it("should return an array where accommodation is always before activities and activities is always before foodAndDrink", function() {
+
+        let allThree = {
+            "categories": [{
+                    "title": "Donuts"
+                },
+                {
+                    "title": "Hostels"
+                },
+                {
+                    "title": "Tours"
+                }
             ]
-        },
-        "phone": "+35314721000",
-        "display_phone": "+353 1 472 1000",
-        "distance": 768.2214475982008
-    };
-    let samepleFoodAndDrinkCategories = getBusinessCategories(samepleFoodAndDrink)
+        };
 
-    let sampleAccommodation = {
-        "id": "EN4nTASAUrLkK5uTD4yOLw",
-        "alias": "brooks-hotel-dublin",
-        "name": "Brook's Hotel",
-        "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/ia-ITKl835klEDDq5GrwDw/o.jpg",
-        "is_closed": false,
-        "url": "https://www.yelp.com/biz/brooks-hotel-dublin?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-        "review_count": 39,
-        "categories": [{
-            "alias": "hotels",
-            "title": "Hotels"
-        }],
-        "rating": 4.5,
-        "coordinates": {
-            "latitude": 53.3422,
-            "longitude": -6.26345
-        },
-        "transactions": [],
-        "price": "€€",
-        "location": {
-            "address1": "Drury Street",
-            "address2": null,
-            "address3": null,
-            "city": "Dublin",
-            "zip_code": "2",
-            "country": "IE",
-            "state": "D",
-            "display_address": [
-                "Drury Street",
-                "Dublin 2",
-                "Republic of Ireland"
+        let allThreeCategories = getBusinessCategories(allThree);
+        $(".filter-btn").addClass("active").removeClass("disabled");
+        let returnedData = determineBusinessTypes(allThreeCategories);
+        expect(returnedData.length).toBe(3);
+        expect(returnedData[0]).toBe("accommodation");
+        expect(returnedData[1]).toBe("activities");
+        expect(returnedData[2]).toBe("foodAndDrink");
+
+    });
+
+    it("should not return business types whose categories are not contained in the argument", function() {
+
+        let accommodationAndFoodDrink = {
+            "categories": [{
+                    "title": "Donuts"
+                },
+                {
+                    "title": "Bakeries"
+                },
+                {
+                    "title": "Residences"
+                }
             ]
-        },
-        "phone": "+35316704000",
-        "display_phone": "+353 1 670 4000",
-        "distance": 870.9943349027225
-    }
-    let sampleAccommodationCategories = getBusinessCategories(sampleAccommodation)
+        };
+        $(".filter-btn").addClass("active").removeClass("disabled");
 
-    let sampleActivity = {
-        "id": "skaxSREzHVY4OVGlIYxWYg",
-        "alias": "national-gallery-of-ireland-dublin",
-        "name": "National Gallery of Ireland",
-        "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/j6Ixu7NV-BpscQQwMWh6tg/o.jpg",
-        "is_closed": false,
-        "url": "https://www.yelp.com/biz/national-gallery-of-ireland-dublin?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-        "review_count": 57,
-        "categories": [{
-                "alias": "museums",
-                "title": "Museums"
-            },
-            {
-                "alias": "galleries",
-                "title": "Art Galleries"
-            }
-        ],
-        "rating": 4,
-        "coordinates": {
-            "latitude": 53.340918,
-            "longitude": -6.252554
-        },
-        "transactions": [],
-        "price": "€",
-        "location": {
-            "address1": "Merrion Square West",
-            "address2": "",
-            "address3": "",
-            "city": "Dublin",
-            "zip_code": "2",
-            "country": "IE",
-            "state": "D",
-            "display_address": [
-                "Merrion Square West",
-                "Dublin 2",
-                "Republic of Ireland"
+        let accommodationAndFoodDrinkCategories = getBusinessCategories(accommodationAndFoodDrink);
+        let returnedData = determineBusinessTypes(accommodationAndFoodDrinkCategories);
+
+        expect(returnedData.length).toBe(2);
+        expect(returnedData[0]).toBe("accommodation");
+        expect(returnedData[1]).toBe("foodAndDrink");
+    });
+
+    it("should should add categories whose button is active first", function() {
+
+        let allThree = {
+            "categories": [{
+                    "title": "Donuts"
+                },
+                {
+                    "title": "Hostels"
+                },
+                {
+                    "title": "Tours"
+                }
             ]
-        },
-        "phone": "+35316615133",
-        "display_phone": "+353 1 661 5133",
-        "distance": 1114.2687069235947
-    }
-    let sampleActivityCategories = getBusinessCategories(sampleActivity);
+        };
 
+        let allThreeCategories = getBusinessCategories(allThree);
+        $(".filter-btn").addClass("active").removeClass("disabled");
+        let returnedData = determineBusinessTypes(allThreeCategories);
 
-
-    it("should accurately return the business type", function() {
-        expect(determineBusinessType(samepleFoodAndDrinkCategories)).toBe("foodAndDrink");
-        expect(determineBusinessType(sampleAccommodationCategories)).toBe("accommodation");
-        expect(determineBusinessType(sampleActivityCategories)).toBe("activities");
+        expect(returnedData[1]).toBe("activities");
+        $("#activities-btn").addClass("disabled").removeClass("active");
+        returnedData = determineBusinessTypes(allThreeCategories);
+        expect(returnedData[1]).toBe("foodAndDrink");
     });
 });
 
@@ -608,29 +547,29 @@ describe("removeYelpData function", function() {
         expect(removeYelpData).toBeDefined();
     })
 
-    let currentYelpData = [
-        { businessType: "foodAndDrink" },
-        { businessType: "foodAndDrink" },
-        { businessType: "activities" },
-        { businessType: "foodAndDrink" },
-        { businessType: "foodAndDrink" },
-        { businessType: "accommodation" },
-        { businessType: "foodAndDrink" },
-        { businessType: "activities" },
-        { businessType: "activities" },
-    ];
 
-    let remainingBusinessTypes = [];
+    it("should remove businesses of its argument business type from destinationExplorerData.currentYelpData if it has no other valid business types", function() {
 
-    it("should remove businesses of its argument business type from destinationExplorerData.currentYelpData", function() {
+        let currentYelpData = [
+            { businessTypes: ["foodAndDrink"] },
+            { businessTypes: ["foodAndDrink"] },
+            { businessTypes: ["activities"] },
+            { businessTypes: ["foodAndDrink"] },
+            { businessTypes: ["foodAndDrink"] },
+            { businessTypes: ["accommodation"] },
+            { businessTypes: ["foodAndDrink"] },
+            { businessTypes: ["activities"] },
+            { businessTypes: ["activities"] },
+        ];
+
+        let remainingbusinessTypess = [];
+
         currentYelpData = removeYelpData(currentYelpData, "activities");
         currentYelpData.forEach(function(business) {
-            remainingBusinessTypes.push(business.businessType);
+            remainingbusinessTypess.push(business.businessTypes[0]);
         });
-        expect(remainingBusinessTypes.includes("activities")).toBe(false);
-        expect(remainingBusinessTypes.includes("foodAndDrink")).toBe(true);
+        expect(remainingbusinessTypess.includes("activities")).toBe(false);
+        expect(remainingbusinessTypess.includes("foodAndDrink")).toBe(true);
+    });
 
-
-    })
-
-})
+});
