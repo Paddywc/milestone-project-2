@@ -6,6 +6,17 @@ let destinationExplorerData = {
     numberOfCallsRunning: 0
 };
 
+// checks if user in on a mobile device
+// code from: https://stackoverflow.com/questions/9048253/in-javascript-if-mobile-phone;
+function userIsOnMobile() {
+    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+        return true
+    }
+    else {
+        return false;
+    }
+}
+
 
 // Adds functionality to Google Maps Searcj
 // Code from Google API documentation: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox.
@@ -28,7 +39,6 @@ function createSearchbox(map) {
             marker.setMap(null);
         });
         markers = [];
-        // For each place, get the icon, name and location.
         let bounds = new google.maps.LatLngBounds()
         places.forEach(function(place) {
             if (!place.geometry) {
@@ -42,7 +52,6 @@ function createSearchbox(map) {
                 anchor: new google.maps.Point(17, 34),
                 scaledSize: new google.maps.Size(25, 25)
             };
-            // Create a marker for each place.
             markers.push(new google.maps.Marker({
                 map: map,
                 icon: icon,
@@ -50,7 +59,6 @@ function createSearchbox(map) {
                 position: place.geometry.location
             }));
             if (place.geometry.viewport) {
-                // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
             }
             else {
@@ -331,16 +339,67 @@ function determineIconToUse(yelpBusiness) {
 
 }
 
-
-function viewMarkerCard(businessId){
-    if(!$(`#${businessId}`).hasClass("highlight")){
-    $(".aside-card").removeClass("highlight");
-    $(`#${businessId}`).addClass("highlight");
+function createInfowindowContent(marker, yelpData){
+    let fullBusinessData;
+    yelpData.forEach(function(business) {
+        if (business.marker === marker) {
+            fullBusinessData = business;
+        }
+    });
     
-    $("#cards-col").animate({
-        scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top))
-    }, 2000);
+    let infoWindowContent = `
+       <div class="card aside-card" id="${fullBusinessData.yelpId}">
+  
+      <img class="card-img-top" src="${fullBusinessData.img}" alt="Business Image">
+      <div class="card-body">
+      
+       <h5 class="card-title">${fullBusinessData.name}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">${convertBusinessCategoriesToString(fullBusinessData.categories)}</h6>
+  
+      <p class="card-text">
+      Yelp Rating: ${fullBusinessData.yelpRating}/5<br>
+      Price: ${fullBusinessData.yelpPrice} 
+      </p>
+      <a href="${fullBusinessData.yelpPage}" target= "_blank" class="card-link">Yelp Page</a>
+  
+      </div>
+      </div>
+      `;
+      
+      return infoWindowContent;
+    
 }
+
+function createAndViewMarkerInfowindow(marker) {
+    // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infowindows
+    
+    let infoWindowContent = createInfowindowContent(marker, destinationExplorerData.currentYelpData);
+    let infoWindow = new google.maps.InfoWindow({
+        content: infoWindowContent
+    });
+    infoWindow.open(destinationExplorerData.map, marker);
+    
+}
+
+
+function viewMarkerCard(businessId) {
+    if (!$(`#${businessId}`).hasClass("highlight")) {
+        $(".aside-card").removeClass("highlight");
+        $(`#${businessId}`).addClass("highlight");
+
+        $("#cards-col").animate({
+            scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top))
+        }, 2000);
+    }
+}
+
+
+function viewInfowindowOrCard(marker, businessId){
+    if (userIsOnMobile()){
+        createAndViewMarkerInfowindow(marker);
+    }else{
+        viewMarkerCard(businessId);
+    }
 }
 
 // Filter out unnecessary data for yelp api
@@ -369,8 +428,9 @@ function retrieveRequiredYelpData(yelpData) {
                     icon: determineIconToUse(business)
                 })
             };
-            businessObject.marker.addListener("click", function(){
-                viewMarkerCard(businessObject.yelpId);
+            businessObject.marker.addListener("click", function() {
+                // viewMarkerCard(businessObject.yelpId);
+                viewInfowindowOrCard(businessObject.marker, businessObject.yelpId);
             });
             requiredYelpData.push(businessObject);
         }

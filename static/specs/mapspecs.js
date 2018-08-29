@@ -1,105 +1,7 @@
-describe('toggleButtonActiveClass function', function() {
-
-    afterEach(function() {
-        $(".filter-btn").removeClass("active").addClass("disabled");
-    })
-
-    it("should exist", function() {
-        expect(toggleButtonActiveClass).toBeDefined();
-    });
-
-    it("should add the active class and remove the disabled class when clicking on a disabled button", function() {
-        $("#activities-btn").click()
-        let hasActiveClass = $("#activities-btn").hasClass("active");
-        let hasDisabledClass = $("#activities-btn").hasClass("disabled");
-        expect(hasActiveClass).toBe(true);
-        expect(hasDisabledClass).toBe(false);
-    });
-
-});
-
-describe('getSearchString function', function() {
-
-
-
-    afterEach(function() {
-        $(".filter-btn").removeClass("active").addClass("disabled");
-    })
-
-    it("should exist", function() {
-        expect(getSearchString).toBeDefined();
-    });
-
-    it("should return a string", function() {
-        searchString = getSearchString()
-        expect(typeof searchString).toBe("string")
-    })
-
-    it("should add search queries to returned string on button click", function() {
-        $("#food-drink-btn").click();
-        let firstSearchString = getSearchString();
-        expect(firstSearchString).toBe('food,bars');
-
-        $("#food-drink-btn").click();
-        $("#accommodation-btn").click();
-        let secondSearchString = getSearchString();
-        expect(secondSearchString).toBe('guesthouses,campgrounds,hostels,hotels');
-
-        $("#food-drink-btn").click();
-        let thirdSearchString = getSearchString()
-        expect(thirdSearchString).toBe(firstSearchString + secondSearchString);
-    });
-
-});
-
-describe('getYelpData function', function() {
-
-
-
-    beforeEach(function() {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-    });
-
-    //enables testing of asynchronous functions
-    // postpones running of 'it' functions 
-    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
-    beforeEach(function(done) {
-        setTimeout(function() {
-            result = 'a different value';
-            done();
-        }, 5000);
-    });
-
-
-    var results;
-    getYelpData(53.3498053, -6.260309, "food,bars").then(function(returnData) {
-        results = returnData;
-    });
-
-    it("Should exist", function() {
-        expect(getYelpData).toBeDefined();
-    });
-
-    it("Should contain businesses information", function() {
-        expect(results.businesses).toBeTruthy();
-    });
-
-
-    it("Should return and object", function() {
-        expect(typeof results).toBe("object")
-
-    });
-
-
-});
-
-describe("retrieveRequiredYelpData function", function() {
-
-
-    it("should exist", function() {
-        expect(retrieveRequiredYelpData).toBeDefined();
-    })
-    let sampleYelpApiresponse = {
+// Helper function
+// To avoid repeating large object
+function returnSampleYelpApiResponse() {
+    return {
         "businesses": [{
                 "id": "rKvPQZcgjrQOLRU0phPoAQ",
                 "alias": "queen-of-tarts-dublin-4",
@@ -287,6 +189,114 @@ describe("retrieveRequiredYelpData function", function() {
             }
         }
     };
+}
+
+
+describe('toggleButtonActiveClass function', function() {
+    
+    beforeEach(function() {
+        $(".filter-btn").removeClass("active").addClass("disabled");
+    })
+    afterEach(function() {
+        $(".filter-btn").removeClass("active").addClass("disabled");
+    })
+
+    it("should exist", function() {
+        expect(toggleButtonActiveClass).toBeDefined();
+    });
+
+    it("should add the active class and remove the disabled class when clicking on a disabled button", function() {
+        $("#activities-btn").click()
+        let hasActiveClass = $("#activities-btn").hasClass("active");
+        let hasDisabledClass = $("#activities-btn").hasClass("disabled");
+        expect(hasActiveClass).toBe(true);
+        expect(hasDisabledClass).toBe(false);
+    });
+
+});
+
+describe('getSearchString function', function() {
+
+
+
+    afterEach(function() {
+        $(".filter-btn").removeClass("active").addClass("disabled");
+    })
+
+    it("should exist", function() {
+        expect(getSearchString).toBeDefined();
+    });
+
+    it("should return a string", function() {
+        searchString = getSearchString()
+        expect(typeof searchString).toBe("string")
+    })
+
+    it("should add search queries to returned string on button click", function() {
+        $("#food-drink-btn").click();
+        let firstSearchString = getSearchString();
+        expect(firstSearchString).toBe('food,bars');
+
+        $("#food-drink-btn").click();
+        $("#accommodation-btn").click();
+        let secondSearchString = getSearchString();
+        expect(secondSearchString).toBe('guesthouses,campgrounds,hostels,hotels');
+
+        $("#food-drink-btn").click();
+        let thirdSearchString = getSearchString()
+        expect(thirdSearchString).toBe(firstSearchString + secondSearchString);
+    });
+
+});
+
+describe('getYelpData function', function() {
+
+
+
+    beforeEach(function() {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+    });
+
+    //enables testing of asynchronous functions
+    // postpones running of 'it' functions 
+    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+    beforeEach(function(done) {
+        setTimeout(function() {
+            result = 'a different value';
+            done();
+        }, 5000);
+    });
+
+
+    var results;
+    getYelpData(53.3498053, -6.260309, "food,bars").then(function(returnData) {
+        results = returnData;
+    });
+
+    it("Should exist", function() {
+        expect(getYelpData).toBeDefined();
+    });
+
+    it("Should contain businesses information", function() {
+        expect(results.businesses).toBeTruthy();
+    });
+
+
+    it("Should return and object", function() {
+        expect(typeof results).toBe("object")
+
+    });
+
+
+});
+
+describe("retrieveRequiredYelpData function", function() {
+
+
+    it("should exist", function() {
+        expect(retrieveRequiredYelpData).toBeDefined();
+    })
+    let sampleYelpApiresponse = returnSampleYelpApiResponse();
     let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
 
 
@@ -543,17 +553,17 @@ describe("determineBusinessTypes function", function() {
 
 describe("getMapCenter function", function() {
 
-    it("should exist", function(){
-          expect(getMapCenter).toBeDefined();
+    it("should exist", function() {
+        expect(getMapCenter).toBeDefined();
     });
 
-  it ("should return the lat and lng of the argument map", function(){
-      let map = generateNewMap(42.23398053, -4.3303097000000434);
-      mapCenter = getMapCenter(map);
-      expect(mapCenter.lat).toBe(42.23398053);
-      expect(mapCenter.lng).toBe(-4.3303097000000434);
+    it("should return the lat and lng of the argument map", function() {
+        let map = generateNewMap(42.23398053, -4.3303097000000434);
+        mapCenter = getMapCenter(map);
+        expect(mapCenter.lat).toBe(42.23398053);
+        expect(mapCenter.lng).toBe(-4.3303097000000434);
 
-  }); 
+    });
 
 });
 
@@ -630,244 +640,86 @@ describe("convertBusinessCategoriesToString function", function() {
 });
 
 describe("createNewCardsContent function", function() {
-    
-    it("should exist", function(){
+
+    it("should exist", function() {
         expect(createNewCardsContent).toBeDefined();
     });
-    
+
     it("should return a card for each element in its argument array", function() {
-    let sampleYelpApiresponse = {
-        "businesses": [{
-                "id": "rKvPQZcgjrQOLRU0phPoAQ",
-                "alias": "queen-of-tarts-dublin-4",
-                "name": "Queen of Tarts",
-                "image_url": "https://s3-media2.fl.yelpcdn.com/bphoto/MvEgnV8zlh0KUurefW007Q/o.jpg",
-                "is_closed": false,
-                "url": "https://www.yelp.com/biz/queen-of-tarts-dublin-4?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-                "review_count": 425,
-                "categories": [{
-                        "alias": "desserts",
-                        "title": "Desserts"
-                    },
-                    {
-                        "alias": "tea",
-                        "title": "Tea Rooms"
-                    },
-                    {
-                        "alias": "breakfast_brunch",
-                        "title": "Breakfast & Brunch"
-                    }
-                ],
-                "rating": 4.5,
-                "coordinates": {
-                    "latitude": 53.3441209863508,
-                    "longitude": -6.26752853393555
-                },
-                "transactions": [],
-                "price": "€€",
-                "location": {
-                    "address1": "Cork Hill",
-                    "address2": "Dame Street",
-                    "address3": "",
-                    "city": "Dublin",
-                    "zip_code": "2",
-                    "country": "IE",
-                    "state": "D",
-                    "display_address": [
-                        "Cork Hill",
-                        "Dame Street",
-                        "Dublin 2",
-                        "Republic of Ireland"
-                    ]
-                },
-                "phone": "+35316707499",
-                "display_phone": "+353 1 670 7499",
-                "distance": 793.2020925529741
-            },
-            {
-                "id": "ezxkn6C_GnL_aCsknDInoQ",
-                "alias": "murphys-ice-cream-dublin-2",
-                "name": "Murphy's Ice Cream",
-                "image_url": "https://s3-media3.fl.yelpcdn.com/bphoto/fPbf6TwtB_pJwz4u_GJwtg/o.jpg",
-                "is_closed": false,
-                "url": "https://www.yelp.com/biz/murphys-ice-cream-dublin-2?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-                "review_count": 262,
-                "categories": [{
-                        "alias": "icecream",
-                        "title": "Ice Cream & Frozen Yogurt"
-                    },
-                    {
-                        "alias": "desserts",
-                        "title": "Desserts"
-                    }
-                ],
-                "rating": 4.5,
-                "coordinates": {
-                    "latitude": 53.3429471,
-                    "longitude": -6.2615189
-                },
-                "transactions": [],
-                "price": "€",
-                "location": {
-                    "address1": "27 Wicklow Street",
-                    "address2": null,
-                    "address3": null,
-                    "city": "Dublin",
-                    "zip_code": "2",
-                    "country": "IE",
-                    "state": "D",
-                    "display_address": [
-                        "27 Wicklow Street",
-                        "Dublin 2",
-                        "Republic of Ireland"
-                    ]
-                },
-                "phone": "+353669152644",
-                "display_phone": "+353 66 915 2644",
-                "distance": 766.8137258596315
-            },
-            {
-                "id": "htRFt8839ESFFV9Wnvu5iQ",
-                "alias": "jameson-distillery-bow-st-dublin",
-                "name": "Jameson Distillery Bow St",
-                "image_url": "https://s3-media1.fl.yelpcdn.com/bphoto/42AqwYiGSfLx6oJBcto07w/o.jpg",
-                "is_closed": false,
-                "url": "https://www.yelp.com/biz/jameson-distillery-bow-st-dublin?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-                "review_count": 375,
-                "categories": [{
-                        "alias": "museums",
-                        "title": "Museums"
-                    },
-                    {
-                        "alias": "winetours",
-                        "title": "Wine Tours"
-                    },
-                    {
-                        "alias": "distilleries",
-                        "title": "Distilleries"
-                    }
-                ],
-                "rating": 4,
-                "coordinates": {
-                    "latitude": 53.3484,
-                    "longitude": -6.27651
-                },
-                "transactions": [],
-                "price": "€€",
-                "location": {
-                    "address1": "Bow Street",
-                    "address2": "Smithfield Village",
-                    "address3": null,
-                    "city": "Dublin",
-                    "zip_code": "7",
-                    "country": "IE",
-                    "state": "D",
-                    "display_address": [
-                        "Bow Street",
-                        "Smithfield Village",
-                        "Dublin 7",
-                        "Republic of Ireland"
-                    ]
-                },
-                "phone": "+35318072355",
-                "display_phone": "+353 1 807 2355",
-                "distance": 1086.657738117655
-            },
-            {
-                "id": "a_MeMmiSST5glL2kbsmPQw",
-                "alias": "guinness-storehouse-dublin",
-                "name": "Guinness Storehouse",
-                "image_url": "https://s3-media4.fl.yelpcdn.com/bphoto/OZj6df2vSZ31nhWnaMSWAw/o.jpg",
-                "is_closed": false,
-                "url": "https://www.yelp.com/biz/guinness-storehouse-dublin?adjust_creative=ybCBnyfJrhBR0MTml5X8qw&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=ybCBnyfJrhBR0MTml5X8qw",
-                "review_count": 1229,
-                "categories": [{
-                        "alias": "breweries",
-                        "title": "Breweries"
-                    },
-                    {
-                        "alias": "museums",
-                        "title": "Museums"
-                    }
-                ],
-                "rating": 4,
-                "coordinates": {
-                    "latitude": 53.3419,
-                    "longitude": -6.28654
-                },
-                "transactions": [],
-                "price": "€€",
-                "location": {
-                    "address1": "St James's Gate",
-                    "address2": null,
-                    "address3": null,
-                    "city": "Dublin",
-                    "zip_code": "8",
-                    "country": "IE",
-                    "state": "D",
-                    "display_address": [
-                        "St James's Gate",
-                        "Dublin 8",
-                        "Republic of Ireland"
-                    ]
-                },
-                "phone": "+35314084800",
-                "display_phone": "+353 1 408 4800",
-                "distance": 1950.5506369376185
-            }
-        ],
-        "total": 1700,
-        "region": {
-            "center": {
-                "longitude": -6.260309,
-                "latitude": 53.3498053
-            }
-        }
-    };
-    let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
-    
-    let newCardsContent = createNewCardsContent(yelpData);
-    let numberOfNewCards = newCardsContent.match(/aside-card/g).length;
-    expect(numberOfNewCards).toBe(yelpData.length);
+        let sampleYelpApiresponse = returnSampleYelpApiResponse()
+        let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
+
+        let newCardsContent = createNewCardsContent(yelpData);
+        let numberOfNewCards = newCardsContent.match(/aside-card/g).length;
+        expect(numberOfNewCards).toBe(yelpData.length);
     });
 })
 
-describe ("getRemovedData function", function(){
-    
-    it("should exist", function(){
+describe("getRemovedData function", function() {
+
+    it("should exist", function() {
         expect(getRemovedData).toBeDefined();
     });
-    
+
     it("should return all elements that are in its second argument but not in its first argument", function() {
-        
+
         let oldData = ["Test1", "Test2", "Test3", "Test4", "Test5", "Test6"];
         let newData = ["Test2", "Test4", "Test5"];
         let removedData = getRemovedData(newData, oldData);
-        
+
         expect(removedData[0]).toBe("Test1");
         expect(removedData[1]).toBe("Test3");
         expect(removedData[2]).toBe("Test6");
         expect(removedData.length).toBe(3);
-        
+
     });
-    
+
 });
 
 describe("extractRemovedIds function", function() {
-    
-    it("should exist", function(){
+
+    it("should exist", function() {
         expect(extractRemovedIds).toBeDefined();
     });
-    
+
     it("should return an array with the id value for every dictionary in its argument array", function() {
-        
-        let removedData = [{yelpId: "123"},{yelpId: "567"},{yelpId: "8910"},{yelpId: "111213"}];
+
+        let removedData = [{ yelpId: "123" }, { yelpId: "567" }, { yelpId: "8910" }, { yelpId: "111213" }];
         let extractedData = extractRemovedIds(removedData);
         expect(extractedData[0]).toBe(removedData[0].yelpId);
         expect(extractedData[1]).toBe(removedData[1].yelpId);
         expect(extractedData[2]).toBe(removedData[2].yelpId);
         expect(extractedData[3]).toBe(removedData[3].yelpId);
         expect(extractedData.length).toBe(4);
-        
+
     });
 });
+
+
+describe("createInfowindowContent function", function() {
+
+    it("should exist", function() {
+        expect(createInfowindowContent).toBeDefined();
+    });
+
+    it("should return a card that includes the business yelpId, name, img, categories, yelpRating, yelpPrice and yelpPage", function() {
+        {
+            let sampleYelpApiresponse = returnSampleYelpApiResponse();
+            let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
+            let marker = yelpData[1].marker
+
+            let infowindowsContent = createInfowindowContent(marker, yelpData);
+            
+            expect(infowindowsContent.includes(yelpData[1].yelpId)).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].name)).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].img)).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].categories[0])).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].yelpRating)).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].yelpPrice)).toBe(true);
+            expect(infowindowsContent.includes(yelpData[1].yelpPage)).toBe(true);
+
+
+
+        }
+    })
+})
