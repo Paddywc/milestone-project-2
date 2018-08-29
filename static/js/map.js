@@ -88,7 +88,6 @@ function getYelpData(latitude, longitude, searchQuery) {
         url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
         success: function(response) {
             displaySearchCompletedToUser();
-            console.log(response)
             return response;
         },
         error: handleError,
@@ -427,10 +426,14 @@ function addDataAndUpdateMap() {
     }
 }
 
+
+
 function removeDataAndUpdateMap(typeToRemove) {
     destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
     destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
 }
+
+
 
 $(".filter-btn").click(function() {
     hideSearchButton();
@@ -440,7 +443,15 @@ $(".filter-btn").click(function() {
     }
     else {
         let typeToRemove = determineBusinessTypesToRemove($(this));
-        removeDataAndUpdateMap(typeToRemove);
+
+        let interval = setInterval(removeDataWhenAllSearchesComplete, 200, typeToRemove);
+        // For dealing with when the user deselects a search filter while the API call is in progress
+        function removeDataWhenAllSearchesComplete(typeToRemove) {
+            if (destinationExplorerData.numberOfCallsRunning === 0) {
+                removeDataAndUpdateMap(typeToRemove);
+                clearInterval(interval);
+            }
+        }
     }
 });
 
