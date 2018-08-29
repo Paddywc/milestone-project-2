@@ -481,6 +481,22 @@ function hideSearchButton() {
     $("#search-btn").addClass("hide")
 }
 
+function viewOnMap(businessId) {
+
+    let businessMarker;
+    destinationExplorerData.currentYelpData.forEach(function(business) {
+        if (business.yelpId === businessId) {
+            businessMarker = business.marker;
+        }
+    });
+
+    destinationExplorerData.map.setCenter(businessMarker.position);
+    destinationExplorerData.map.setZoom(17);
+    businessMarker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+        businessMarker.setAnimation(null);
+    }, 3000);
+}
 
 function createNewCardsContent(yelpData) {
     let cardsContentString = "";
@@ -499,7 +515,7 @@ function createNewCardsContent(yelpData) {
       Yelp Rating: ${business.yelpRating}/5<br>
       Price: ${business.yelpPrice} 
       </p>
-      
+            <a onclick="viewOnMap('${business.yelpId}')" href="#" class="card-link">View on Map</a>
       <a href="${business.yelpPage}" target= "_blank" class="card-link">Yelp Page</a>
   
       </div>
@@ -535,40 +551,40 @@ function addDataAndUpdatePage() {
 }
 
 
-function getRemovedData(newYelpData, oldYelpData){
+function getRemovedData(newYelpData, oldYelpData) {
     let removedData = [];
-    oldYelpData.forEach(function(business){
-        if(!newYelpData.includes(business)){
+    oldYelpData.forEach(function(business) {
+        if (!newYelpData.includes(business)) {
             removedData.push(business);
         }
     });
-    
-    
-    
+
+
+
     return removedData;
-    
-    
+
+
 }
 
 
-function extractRemovedIds(removedData){
-     let removedIds = [];
-    for (let i =0; i < removedData.length; i++){
+function extractRemovedIds(removedData) {
+    let removedIds = [];
+    for (let i = 0; i < removedData.length; i++) {
         removedIds.push(removedData[i].yelpId);
     }
     return removedIds;
 }
 
-function removeCards(removedData){
-    
-   let removedIds = extractRemovedIds(removedData);
-    
-   $(".aside-card").each(function(){
-      if (removedIds.includes(this.id)) {
-          this.remove();
-      }
-   });
-    
+function removeCards(removedData) {
+
+    let removedIds = extractRemovedIds(removedData);
+
+    $(".aside-card").each(function() {
+        if (removedIds.includes(this.id)) {
+            this.remove();
+        }
+    });
+
 }
 
 
@@ -578,7 +594,7 @@ function removeDataAndUpdatePage(typeToRemove) {
 
     destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
     destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
-    
+
     let removedData = getRemovedData(destinationExplorerData.currentYelpData, oldYelpData);
     removeCards(removedData);
 }
