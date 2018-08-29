@@ -3,9 +3,11 @@
   position: absolute;
 }
 
+$body-height: 90vh;
+
 #map {
   width: 75vw;
-  height: 90vh;
+  height: $body-height;
 }
 
 #map-col{
@@ -33,8 +35,13 @@
 }
 
 #cards-col{
+  height: $body-height;
+  overflow-y: scroll;
   .aside-card{
     flex: none;
     width: 100%;
+  }
+  .highlight{
+    background-color: blue;
   }
 }

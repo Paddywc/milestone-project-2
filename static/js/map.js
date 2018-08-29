@@ -331,6 +331,18 @@ function determineIconToUse(yelpBusiness) {
 
 }
 
+
+function viewMarkerCard(businessId){
+    if(!$(`#${businessId}`).hasClass("highlight")){
+    $(".aside-card").removeClass("highlight");
+    $(`#${businessId}`).addClass("highlight");
+    
+    $("#cards-col").animate({
+        scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top))
+    }, 2000);
+}
+}
+
 // Filter out unnecessary data for yelp api
 // Creates google maps marker for each entry
 // Doesn't add business that already exists in currentYelpData
@@ -357,6 +369,9 @@ function retrieveRequiredYelpData(yelpData) {
                     icon: determineIconToUse(business)
                 })
             };
+            businessObject.marker.addListener("click", function(){
+                viewMarkerCard(businessObject.yelpId);
+            });
             requiredYelpData.push(businessObject);
         }
     });
@@ -497,6 +512,8 @@ function viewOnMap(businessId) {
         businessMarker.setAnimation(null);
     }, 3000);
 }
+
+
 
 function createNewCardsContent(yelpData) {
     let cardsContentString = "";
