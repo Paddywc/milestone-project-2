@@ -32,3 +32,9 @@
   display: none !important;
 }
 
+#cards-col{
+  .aside-card{
+    flex: none;
+    width: 100%;
+  }
+}

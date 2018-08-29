@@ -20,4 +20,8 @@
 .hide {
   display: none !important; }
 
+#cards-col .aside-card {
+  flex: none;
+  width: 100%; }
+
 /*# sourceMappingURL=styles.css.map */

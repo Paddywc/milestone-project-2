@@ -10,54 +10,55 @@ let destinationExplorerData = {
 // Adds functionality to Google Maps Searcj
 // Code from Google API documentation: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox.
 function createSearchbox(map) {
-  let input = document.getElementById('pac-input');
-  let searchBox = new google.maps.places.SearchBox(input)
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', function () {
-    searchBox.setBounds(map.getBounds());
-  });
-  let markers = [];
-  // Listen for the event fired when the user selects a prediction and retrieve
-  // more details for that place.
-  searchBox.addListener('places_changed', function () {
-    let places = searchBox.getPlaces();
+    let input = document.getElementById('pac-input');
+    let searchBox = new google.maps.places.SearchBox(input)
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+    });
+    let markers = [];
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener('places_changed', function() {
+        let places = searchBox.getPlaces();
 
-    // Clear out the old markers.
-    markers.forEach(function (marker) {
-      marker.setMap(null);
+        // Clear out the old markers.
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+        // For each place, get the icon, name and location.
+        let bounds = new google.maps.LatLngBounds()
+        places.forEach(function(place) {
+            if (!place.geometry) {
+                console.log('Returned place contains no geometry');
+                return;
+            }
+            let icon = {
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+                map: map,
+                icon: icon,
+                title: place.name,
+                position: place.geometry.location
+            }));
+            if (place.geometry.viewport) {
+                // Only geocodes have viewport.
+                bounds.union(place.geometry.viewport);
+            }
+            else {
+                bounds.extend(place.geometry.location);
+            }
+        });
+        map.fitBounds(bounds);
     });
-    markers = [];
-    // For each place, get the icon, name and location.
-    let bounds = new google.maps.LatLngBounds()
-    places.forEach(function (place) {
-      if (!place.geometry) {
-        console.log('Returned place contains no geometry');
-        return;
-      }
-      let icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
-      // Create a marker for each place.
-      markers.push(new google.maps.Marker({
-        map: map,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location
-      }));
-      if (place.geometry.viewport) {
-        // Only geocodes have viewport.
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-    });
-    map.fitBounds(bounds);
-  });
 }
 
 
@@ -209,6 +210,19 @@ function getBusinessCategories(yelpBusiness) {
         categoriesArray.push(businessCategories[i].title);
     }
     return categoriesArray;
+}
+
+// For displaying categories to the user on cards/infoboxes
+function convertBusinessCategoriesToString(categoriesArray) {
+    let categoriesString = "";
+    for (let i = 0; i < categoriesArray.length; i++) {
+        categoriesString += categoriesArray[i];
+        if (i < (categoriesArray.length - 1)) {
+            categoriesString += ", ";
+        }
+    }
+
+    return categoriesString;
 }
 
 function getYelpCategoriesForBusinessType(businessType) {
@@ -468,8 +482,50 @@ function hideSearchButton() {
 }
 
 
+function getCurrentCardsContent() {
+    return $('#cards-content .card-group').html();
+}
 
-function addDataAndUpdateMap() {
+function createNewCardsContent(yelpData) {
+    let cardsContentString = "";
+    if (yelpData.length > 0) {
+        yelpData.forEach(function(business) {
+            let card = `
+      <div class="card aside-card" id=${business.yelpId}>
+  
+      <img class="card-img-top" src="${business.img}" alt="Business Image">
+      <div class="card-body">
+      
+      <h5 class="card-title">${business.name}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">${convertBusinessCategoriesToString(business.categories)}</h6>
+  
+      <p class="card-text">
+      Yelp Rating: ${business.yelpRating}/5<br>
+      Price: ${business.yelpPrice} 
+      </p>
+      
+      <a href="${business.yelpPage}" target= "_blank" class="card-link">Yelp Page</a>
+  
+      </div>
+      </div>
+      `;
+
+            cardsContentString += card;
+        });
+    }
+
+    return cardsContentString;
+}
+
+
+function addToCards(yelpData) {
+    let newContent = createNewCardsContent(yelpData);
+    $('#cards-content .card-group').append(newContent);
+}
+
+
+
+function addDataAndUpdatePage() {
     let searchString = getSearchString();
     // If at least one filter button is active
     if (searchString != "") {
@@ -477,6 +533,8 @@ function addDataAndUpdateMap() {
         getYelpData(mapCenter.lat, mapCenter.lng, searchString).then(function(yelpResponse) {
             destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
             destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+            addToCards(destinationExplorerData.currentYelpData);
+
         });
     }
 }
@@ -494,7 +552,8 @@ $(".filter-btn").click(function() {
     hideSearchButton();
     toggleButtonActiveClass($(this));
     if ($(this).hasClass("active")) {
-        addDataAndUpdateMap();
+        addDataAndUpdatePage();
+
     }
     else {
         let typeToRemove = determineBusinessTypesToRemove($(this));
@@ -513,7 +572,7 @@ $(".filter-btn").click(function() {
 
 $("#search-btn").click(function() {
     hideSearchButton();
-    addDataAndUpdateMap();
+    addDataAndUpdatePage();
 });
 
 
@@ -525,6 +584,4 @@ function initMapDestinationExplorer() {
             showSearchButton();
         }
     });
-};
-
-
+}
