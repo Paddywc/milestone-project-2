@@ -482,16 +482,12 @@ function hideSearchButton() {
 }
 
 
-function getCurrentCardsContent() {
-    return $('#cards-content .card-group').html();
-}
-
 function createNewCardsContent(yelpData) {
     let cardsContentString = "";
     if (yelpData.length > 0) {
         yelpData.forEach(function(business) {
             let card = `
-      <div class="card aside-card" id=${business.yelpId}>
+      <div class="card aside-card" id="${business.yelpId}">
   
       <img class="card-img-top" src="${business.img}" alt="Business Image">
       <div class="card-body">
@@ -534,16 +530,57 @@ function addDataAndUpdatePage() {
             destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
             destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
             addToCards(destinationExplorerData.currentYelpData);
-
         });
     }
 }
 
 
+function getRemovedData(newYelpData, oldYelpData){
+    let removedData = [];
+    oldYelpData.forEach(function(business){
+        if(!newYelpData.includes(business)){
+            removedData.push(business);
+        }
+    });
+    
+    
+    
+    return removedData;
+    
+    
+}
 
-function removeDataAndUpdateMap(typeToRemove) {
+
+function extractRemovedIds(removedData){
+     let removedIds = [];
+    for (let i =0; i < removedData.length; i++){
+        removedIds.push(removedData[i].yelpId);
+    }
+    return removedIds;
+}
+
+function removeCards(removedData){
+    
+   let removedIds = extractRemovedIds(removedData);
+    
+   $(".aside-card").each(function(){
+      if (removedIds.includes(this.id)) {
+          this.remove();
+      }
+   });
+    
+}
+
+
+function removeDataAndUpdatePage(typeToRemove) {
+    let oldYelpData = [];
+    oldYelpData = oldYelpData.concat(destinationExplorerData.currentYelpData);
+
     destinationExplorerData.currentYelpData = removeYelpData(destinationExplorerData.currentYelpData, typeToRemove);
     destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
+    
+    let removedData = getRemovedData(destinationExplorerData.currentYelpData, oldYelpData);
+    removeCards(removedData);
 }
 
 
@@ -562,7 +599,7 @@ $(".filter-btn").click(function() {
         // For dealing with when the user deselects a search filter while the API call is in progress
         function removeDataWhenAllSearchesComplete(typeToRemove) {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
-                removeDataAndUpdateMap(typeToRemove);
+                removeDataAndUpdatePage(typeToRemove);
                 clearInterval(interval);
             }
         }

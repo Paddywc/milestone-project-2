@@ -831,3 +831,43 @@ describe("createNewCardsContent function", function() {
     expect(numberOfNewCards).toBe(yelpData.length);
     });
 })
+
+describe ("getRemovedData function", function(){
+    
+    it("should exist", function(){
+        expect(getRemovedData).toBeDefined();
+    });
+    
+    it("should return all elements that are in its second argument but not in its first argument", function() {
+        
+        let oldData = ["Test1", "Test2", "Test3", "Test4", "Test5", "Test6"];
+        let newData = ["Test2", "Test4", "Test5"];
+        let removedData = getRemovedData(newData, oldData);
+        
+        expect(removedData[0]).toBe("Test1");
+        expect(removedData[1]).toBe("Test3");
+        expect(removedData[2]).toBe("Test6");
+        expect(removedData.length).toBe(3);
+        
+    });
+    
+});
+
+describe("extractRemovedIds function", function() {
+    
+    it("should exist", function(){
+        expect(extractRemovedIds).toBeDefined();
+    });
+    
+    it("should return an array with the id value for every dictionary in its argument array", function() {
+        
+        let removedData = [{yelpId: "123"},{yelpId: "567"},{yelpId: "8910"},{yelpId: "111213"}];
+        let extractedData = extractRemovedIds(removedData);
+        expect(extractedData[0]).toBe(removedData[0].yelpId);
+        expect(extractedData[1]).toBe(removedData[1].yelpId);
+        expect(extractedData[2]).toBe(removedData[2].yelpId);
+        expect(extractedData[3]).toBe(removedData[3].yelpId);
+        expect(extractedData.length).toBe(4);
+        
+    });
+});
