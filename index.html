@@ -23,11 +23,52 @@
 
 <body>
     <header>
-        <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/button-group/-->
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn filter-btn btn-primary disabled" id="activities-btn">Activities</button>
-            <button type="button" class="btn filter-btn btn-primary disabled" id="food-drink-btn">Food & Drink</button>
-            <button type="button" class="btn filter-btn btn-primary disabled" id="accommodation-btn">Accommodation</button>
+        <div class="container-fluid">
+            <div class="list-inline clearfix">
+                <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/button-group/-->
+                <li class="list-inline-item">
+                    <h1 id="header-title"> Destination Explorer </h1>
+                </li>
+
+                <li class="list-inline-item">
+                    <h2 id="buttons-prefix">Search:</h2>
+                </li>
+
+
+                <li class="list-inline-item">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn activities-filter filter-btn btn-danger disabled" id="activities-btn">Activities</button>
+                        <button type="button" class="btn food-drink-filter filter-btn btn-warning disabled" id="food-drink-btn">Food & Drink</button>
+                        <button type="button" class="btn accommodation-filter filter-btn btn-primary disabled" id="accommodation-btn">Accommodation</button>
+                    </div>
+                </li>
+
+                <li class="list-inline-item">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filter-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Search For:
+  </button>
+                        <div class="dropdown-menu" aria-labelledby="filter-dropdown">
+                            <div class="dropdown-item">
+                                <input type="checkbox" class="activities-filter filter-checkbox" value="" id="activities-checkbox">
+                                <label class="form-check-label" id="activities-checkbox-label" for="activities-checkbox">Activities</label>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <input type="checkbox" class="food-drink-filter filter-checkbox" value="" id="food-drink-checkbox">
+                                <label class="form-check-label" id="food-drink-checkbox-label" for="food-drink-checkbox"> Food & Drink</label>
+                            </div>
+
+                            <div class="dropdown-item">
+                                <input type="checkbox" value="" class="accommodation-filter filter-checkbox" id="accommodation-checkbox">
+                                <label class="form-check-label" id="accommodation-checkbox-label" for="accommodation-checkbox"> Accommodation</label>
+                            </div>
+                        </div>
+                    </div>
+</li>
+
+
+            </div>
         </div>
     </header>
 

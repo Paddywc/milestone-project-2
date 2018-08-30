@@ -67,7 +67,7 @@ function createSearchbox(map) {
     // more details for that place.
     searchBox.addListener('places_changed', function() {
         let oldMapCenter = getMapCenter(map);
-        
+
         let places = searchBox.getPlaces();
 
         // Clear out the old markers.
@@ -120,6 +120,72 @@ function toggleButtonActiveClass(button) {
         $(button).addClass("disabled");
     }
 };
+
+// To avoid loop where clicking checkbox triggers click on button and vice versa
+function checkIfFiltersSynchronized(button, checkbox) {
+
+    if (($(button).hasClass("active") && $(checkbox).is(":checked")) || ($(button).hasClass("disabled") && !$(checkbox).is(":checked"))) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+
+function synchronizeButtonsAndCheckboxs(itemClicked) {
+
+
+    let filtersAlreadySynchronized, filterCategory;
+
+    if ($(itemClicked).hasClass("activities-filter")) {
+        filterCategory = "activities"
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#activities-btn"), $("#activities-checkbox"))
+    }
+    else if ($(itemClicked).hasClass("food-drink-filter")) {
+        filterCategory = "foodAndDrink"
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#food-drink-btn"), $("#food-drink-checkbox"))
+    }
+    else {
+        filterCategory = "accommodation";
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#accommodation-btn"), $("#accommodation-checkbox"))
+    }
+
+    if (!filtersAlreadySynchronized) {
+
+        if ($(itemClicked).hasClass("filter-checkbox")) {
+
+            if (filterCategory === "activities") {
+                $("#activities-btn").click();
+            }
+            else if (filterCategory === "foodAndDrink") {
+                $("#food-drink-btn").click();
+            }
+            else {
+                $("#accommodation-btn").click();
+            }
+
+        }
+        else {
+            if (filterCategory === "activities") {
+                $("#activities-checkbox").click();
+            }
+            else if (filterCategory === "foodAndDrink") {
+                $("#food-drink-checkbox").click();
+            }
+            else {
+                $("#accommodation-checkbox").click();
+            }
+        }
+    }
+}
+
+
+$(".filter-checkbox").click(function() {
+
+    synchronizeButtonsAndCheckboxs(this);
+})
+
 
 function getSearchString() {
     // filters terms for yelp search API
@@ -174,7 +240,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 
 
     function handleError(xhr, status, error) {
-        let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error'
+        let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error. '
         displaySearchErrorToUser(errorMessage)
         console.log(errorMessage);
     }
@@ -189,7 +255,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 
     return $.ajax({
         type: "GET",
-        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
+        url: `https://dddapi.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
         success: function(response) {
             displaySearchCompletedToUser();
             return response;
@@ -388,7 +454,7 @@ function createInfowindowContent(marker, yelpData) {
     });
 
     let infoWindowContent = `
-       <div class="card aside-card" id="${fullBusinessData.yelpId}">
+       <div class="card infowindow-card ${fullBusinessData.businessTypes[0]}" id="${fullBusinessData.yelpId}">
   
       <img class="card-img-top" src="${fullBusinessData.img}" alt="Business Image">
       <div class="card-body">
@@ -611,7 +677,7 @@ function createNewCardsContent(yelpData) {
     if (yelpData.length > 0) {
         yelpData.forEach(function(business) {
             let card = `
-      <div class="card aside-card" id="${business.yelpId}">
+      <div class="card aside-card ${business.businessTypes[0]}" id="${business.yelpId}">
   
       <img class="card-img-top" src="${business.img}" alt="Business Image">
       <div class="card-body">
@@ -712,6 +778,7 @@ function removeDataAndUpdatePage(typeToRemove) {
 $(".filter-btn").click(function() {
     hideSearchButton();
     toggleButtonActiveClass($(this));
+    synchronizeButtonsAndCheckboxs(this);
     if ($(this).hasClass("active")) {
         addDataAndUpdatePage();
 
