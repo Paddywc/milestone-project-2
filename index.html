@@ -25,7 +25,7 @@
     <header>
         <div class="container-fluid">
             <div class="list-inline clearfix">
-                <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/button-group/-->
+                <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/modal/-->
                 <li class="list-inline-item">
                     <h1 id="header-title"> Destination Explorer </h1>
                 </li>
@@ -36,7 +36,7 @@
 
 
                 <li class="list-inline-item">
-                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <div class="btn-group" role="group">
                         <button type="button" class="btn activities-filter filter-btn btn-danger disabled" id="activities-btn">Activities</button>
                         <button type="button" class="btn food-drink-filter filter-btn btn-warning disabled" id="food-drink-btn">Food & Drink</button>
                         <button type="button" class="btn accommodation-filter filter-btn btn-primary disabled" id="accommodation-btn">Accommodation</button>
@@ -65,7 +65,37 @@
                             </div>
                         </div>
                     </div>
-</li>
+                </li>
+
+                <li class="list-inline-item">
+                    <!-- Button trigger modal -->
+                    <button type="button" id="modal-btn" class="btn btn-primary" data-toggle="modal" data-target="#how-it-works-modal">
+  How it works
+</button>
+
+
+                    <!-- Modal -->
+                    <!--From Bootstrap: https://getbootstrap.com/docs/4.0/components/modal/-->
+                    <div class="modal fade" id="how-it-works-modal" tabindex="-1" role="dialog" aria-labelledby="how-it-works-modal-label" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="how-it-works-modal-label">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
 
 
             </div>
@@ -73,39 +103,52 @@
     </header>
 
     <main>
-        <div class="container-fluid">
-            <div class="row">
-                <button type="button" id="search-btn" class="btn hide btn-outline-warning">Search this Area</button>
+        <article>
+            <div class="container-fluid">
+                <div class="row">
+                    <button type="button" id="search-btn" class="btn hide btn-outline-warning">Search this Area</button>
 
-                <!--map-->
-                <div class="col-xs-12 col-sm-9" id="map-col">
-                    <!--Alerts from bootstrap documentation https://getbootstrap.com/docs/4.0/components/alerts/-->
-                    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-                    <div class="alert alert-info hide" id="searching-alert" role="alert">
-                        Searching...
-                    </div>
-                    <div class="alert alert-success hide" role="alert" id="search-complete-alert">
-                        Search complete!
-                    </div>
-                    <div class="alert alert-danger  hide" role="alert" id="search-error-alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <!--map-->
+                    <div class="col-xs-12 col-sm-9" id="map-col">
+                        <!--Alerts from bootstrap documentation https://getbootstrap.com/docs/4.0/components/alerts/-->
+                        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                        <div class="alert alert-info hide" id="searching-alert" role="alert">
+                            Searching...
+                        </div>
+                        <div class="alert alert-success hide" role="alert" id="search-complete-alert">
+                            Search complete!
+                        </div>
+                        <div class="alert alert-danger  hide" role="alert" id="search-error-alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
+                        </div>
+                        <div id="map"></div>
                     </div>
-                    <div id="map"></div>
+
+                    <!--cards-->
+                    <div class="col-sm-3 d-none d-sm-block" id="cards-col">
+                        <aside id="cards-content">
+                            <div class="card-group">
+                                <div id="card-col-instructions">
+                                    <h3 id="how-it-works-tile">How it Works:</h3>
+                                    <ul id="instructions-list">
+                                        <li>Find your holiday destination using the map's search box</li>
+                                        <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
+                                        <li>Click the button again to remove those locations from the map</li>
+                                        <li>Click on a location to learn more about it</li>
+                                    </ul>
+                                </div>
+
+
+                            </div>
+                        </aside>
+                    </div>
+
+
                 </div>
-
-                <!--cards-->
-                <div class="col-sm-3 d-none d-sm-block" id="cards-col">
-                    <aside id="cards-content">
-                        <div class="card-group"></div>
-                    </aside>
-
-                </div>
-
-
             </div>
-        </div>
+        </article>
     </main>
 
     <!--Bootstrap and jquery -->

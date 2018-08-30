@@ -111,17 +111,11 @@ function createSearchbox(map) {
 
 
 function toggleButtonActiveClass(button) {
-    if ($(button).hasClass("disabled")) {
-        $(button).removeClass("disabled");
-        $(button).addClass("active");
-    }
-    else {
-        $(button).removeClass("active");
-        $(button).addClass("disabled");
-    }
-};
+    $(button).toggleClass("disabled");
+    $(button).toggleClass("active");
+}
 
-// To avoid loop where clicking checkbox triggers click on button and vice versa
+// To avoid loop where clicking fitler checkbox triggers filter button click and vice versa
 function checkIfFiltersSynchronized(button, checkbox) {
 
     if (($(button).hasClass("active") && $(checkbox).is(":checked")) || ($(button).hasClass("disabled") && !$(checkbox).is(":checked"))) {
@@ -255,7 +249,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 
     return $.ajax({
         type: "GET",
-        url: `https://dddapi.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
+        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
         success: function(response) {
             displaySearchCompletedToUser();
             return response;
@@ -445,7 +439,7 @@ function determineIconToUse(yelpBusiness) {
 
 }
 
-function createInfowindowContent(marker, yelpData) {
+function createInfoWindowContent(marker, yelpData) {
     let fullBusinessData;
     yelpData.forEach(function(business) {
         if (business.marker === marker) {
@@ -454,7 +448,7 @@ function createInfowindowContent(marker, yelpData) {
     });
 
     let infoWindowContent = `
-       <div class="card infowindow-card ${fullBusinessData.businessTypes[0]}" id="${fullBusinessData.yelpId}">
+       <div class="card infoWindow-card ${fullBusinessData.businessTypes[0]}" id="${fullBusinessData.yelpId}">
   
       <img class="card-img-top" src="${fullBusinessData.img}" alt="Business Image">
       <div class="card-body">
@@ -476,10 +470,10 @@ function createInfowindowContent(marker, yelpData) {
 
 }
 
-function createAndViewMarkerInfowindow(marker) {
-    // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infowindows
+function createAndViewMarkerInfoWindow(marker) {
+    // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infoWindows
 
-    let infoWindowContent = createInfowindowContent(marker, destinationExplorerData.currentYelpData);
+    let infoWindowContent = createInfoWindowContent(marker, destinationExplorerData.currentYelpData);
     let infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent
     });
@@ -500,9 +494,9 @@ function viewMarkerCard(businessId) {
 }
 
 
-function viewInfowindowOrCard(marker, businessId) {
+function viewInfoWindowOrCard(marker, businessId) {
     if (userIsOnMobile()) {
-        createAndViewMarkerInfowindow(marker);
+        createAndViewMarkerInfoWindow(marker);
     }
     else {
         viewMarkerCard(businessId);
@@ -537,7 +531,7 @@ function retrieveRequiredYelpData(yelpData) {
             };
             businessObject.marker.addListener("click", function() {
                 // viewMarkerCard(businessObject.yelpId);
-                viewInfowindowOrCard(businessObject.marker, businessObject.yelpId);
+                viewInfoWindowOrCard(businessObject.marker, businessObject.yelpId);
             });
             requiredYelpData.push(businessObject);
         }
@@ -653,6 +647,17 @@ function hideSearchButton() {
     $("#search-btn").addClass("hide")
 }
 
+function showOrHideModalButton() {
+    if (!userIsOnMobile()) {
+        if ($(".aside-card").length > 0) {
+            $("#modal-btn").removeClass("hide");
+        }
+        else {
+            $("#modal-btn").addClass("hide");
+        }
+    }
+};
+
 function viewOnMap(businessId) {
 
     let businessMarker;
@@ -720,6 +725,7 @@ function addDataAndUpdatePage() {
             destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
             destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
             addToCards(destinationExplorerData.currentYelpData);
+            showOrHideModalButton();
         });
     }
 }
@@ -771,6 +777,7 @@ function removeDataAndUpdatePage(typeToRemove) {
 
     let removedData = getRemovedData(destinationExplorerData.currentYelpData, oldYelpData);
     removeCards(removedData);
+    showOrHideModalButton();
 }
 
 
@@ -805,9 +812,10 @@ $("#search-btn").click(function() {
 
 
 function initMapDestinationExplorer() {
+    showOrHideModalButton();
     destinationExplorerData.map = generateNewMap();
     createSearchbox(destinationExplorerData.map);
-    destinationExplorerData.map.addListener('idle', function() {
+    destinationExplorerData.map.addListener('tilesloaded', function() {
         if ($(".filter-btn").hasClass("active")) {
             showSearchButton();
         }
