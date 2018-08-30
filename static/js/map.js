@@ -6,11 +6,12 @@ let destinationExplorerData = {
     numberOfCallsRunning: 0
 };
 
-// checks if user in on a mobile device
-// code from: https://stackoverflow.com/questions/9048253/in-javascript-if-mobile-phone;
+
 function userIsOnMobile() {
-    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-        return true
+    // 567px width is Bootstrap SM- the screen width where cards appear on the page
+    let windowWidth = $(window).width();
+    if (windowWidth < 567) {
+        return true;
     }
     else {
         return false;
@@ -18,8 +19,41 @@ function userIsOnMobile() {
 }
 
 
+function getMapCenter(map) {
+
+    let center = map.getCenter();
+
+    return {
+        center: center,
+        lat: center.lat(),
+        lng: center.lng()
+    };
+}
+
+function calculateDistanceBetweenTwoCenters(oldCenter, newCenter) {
+    // Returns the distance in meters between the two points
+    return google.maps.geometry.spherical.computeDistanceBetween(oldCenter.center, newCenter.center);
+}
+
+function clearCardsIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInKilometers) {
+    let metersMoved = calculateDistanceBetweenTwoCenters(oldCenter, newCenter);
+    if (metersMoved > (distanceInKilometers * 1000)) {
+        let interval = setInterval(removeCardsWhenSearchComplete, 200);
+
+        function removeCardsWhenSearchComplete() {
+            if (destinationExplorerData.numberOfCallsRunning === 0) {
+                $(".card-group").empty();
+                clearInterval(interval);
+            }
+        }
+    }
+}
+
+
+
 // Adds functionality to Google Maps Searcj
 // Code from Google API documentation: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox.
+// Added code to return old and new center and use them in clearCardsIfMovedOverSpecifiedDistance
 function createSearchbox(map) {
     let input = document.getElementById('pac-input');
     let searchBox = new google.maps.places.SearchBox(input)
@@ -32,6 +66,8 @@ function createSearchbox(map) {
     // Listen for the event fired when the user selects a prediction and retrieve
     // more details for that place.
     searchBox.addListener('places_changed', function() {
+        let oldMapCenter = getMapCenter(map);
+        
         let places = searchBox.getPlaces();
 
         // Clear out the old markers.
@@ -66,6 +102,10 @@ function createSearchbox(map) {
             }
         });
         map.fitBounds(bounds);
+        let newMapCenter = getMapCenter(map);
+        clearCardsIfMovedOverSpecifiedDistance(oldMapCenter, newMapCenter, 20);
+
+
     });
 }
 
@@ -339,14 +379,14 @@ function determineIconToUse(yelpBusiness) {
 
 }
 
-function createInfowindowContent(marker, yelpData){
+function createInfowindowContent(marker, yelpData) {
     let fullBusinessData;
     yelpData.forEach(function(business) {
         if (business.marker === marker) {
             fullBusinessData = business;
         }
     });
-    
+
     let infoWindowContent = `
        <div class="card aside-card" id="${fullBusinessData.yelpId}">
   
@@ -365,20 +405,20 @@ function createInfowindowContent(marker, yelpData){
       </div>
       </div>
       `;
-      
-      return infoWindowContent;
-    
+
+    return infoWindowContent;
+
 }
 
 function createAndViewMarkerInfowindow(marker) {
     // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infowindows
-    
+
     let infoWindowContent = createInfowindowContent(marker, destinationExplorerData.currentYelpData);
     let infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent
     });
     infoWindow.open(destinationExplorerData.map, marker);
-    
+
 }
 
 
@@ -394,10 +434,11 @@ function viewMarkerCard(businessId) {
 }
 
 
-function viewInfowindowOrCard(marker, businessId){
-    if (userIsOnMobile()){
+function viewInfowindowOrCard(marker, businessId) {
+    if (userIsOnMobile()) {
         createAndViewMarkerInfowindow(marker);
-    }else{
+    }
+    else {
         viewMarkerCard(businessId);
     }
 }
@@ -537,16 +578,6 @@ function removeYelpData(yelpData, typeToRemove) {
     return yelpData;
 }
 
-function getMapCenter(map) {
-
-    let center = map.getCenter();
-
-    return {
-        center: center,
-        lat: center.lat(),
-        lng: center.lng()
-    };
-}
 
 function showSearchButton() {
     $("#search-btn").removeClass("hide")

@@ -723,3 +723,21 @@ describe("createInfowindowContent function", function() {
         }
     })
 })
+
+
+describe("calculateDistanceBetweenTwoCenters function", function(){
+    
+    it("should exist", function(){
+        expect(calculateDistanceBetweenTwoCenters).toBeDefined();
+    });
+    
+    it("should return the distance in meters between two points", function() {
+        let brayDartStation = {center: new google.maps.LatLng(53.2052278, -6.1053272)};
+        let graystonesDartStation = {center: new google.maps.LatLng(53.1440815, -6.0632049)};
+        let distanceBetween = calculateDistanceBetweenTwoCenters(brayDartStation, graystonesDartStation);
+        expect(distanceBetween > 7000).toBe(true);
+        expect(distanceBetween > 8000).toBe(false);
+        
+    });
+    
+})
