@@ -17,10 +17,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/jasmine-html.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/boot.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/jasmine.css" />
-    
+
     <!--Google font icons-->
-   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
 </head>
@@ -29,84 +28,96 @@
     <header>
         <div class="container-fluid">
             <div class="list-inline clearfix">
-                <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/modal/-->
-                <li class="list-inline-item">
-                    <h1 id="header-title"> Destination Explorer </h1>
-                </li>
+                <div class="row align-items-center">
 
-                <li class="list-inline-item">
-                    <h2 id="buttons-prefix">Search:</h2>
-                </li>
-
-
-                <li class="list-inline-item">
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn activities-filter filter-btn btn-danger disabled" id="activities-btn">Activities</button>
-                        <button type="button" class="btn food-drink-filter filter-btn btn-warning disabled" id="food-drink-btn">Food & Drink</button>
-                        <button type="button" class="btn accommodation-filter filter-btn btn-primary disabled" id="accommodation-btn">Accommodation</button>
+                    <!--From bootstrap documentation: https://getbootstrap.com/docs/4.0/components/modal/-->
+                    <div class="title-section">
+                        <li class="list-inline-item">
+                            <h1 id="header-title"> Destination Explorer </h1>
+                        </li>
                     </div>
-                </li>
 
-                <li class="list-inline-item">
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="filter-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                    <div class="filter-section">
+
+                        <li class="list-inline-item">
+                            <h2 id="buttons-prefix">Search:</h2>
+                        </li>
+
+
+                        <li class="list-inline-item">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn activities-filter filter-btn btn-danger disabled" id="activities-btn">Activities</button>
+                                <button type="button" class="btn food-drink-filter filter-btn btn-warning disabled" id="food-drink-btn">Food & Drink</button>
+                                <button type="button" class="btn accommodation-filter filter-btn btn-primary disabled" id="accommodation-btn">Accommodation</button>
+                            </div>
+                        </li>
+
+                        <li class="list-inline-item">
+                            <div class="dropdown-section">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="filter-dropdown-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Search For:
   </button>
-                        <div class="dropdown-menu" aria-labelledby="filter-dropdown">
-                            <div class="dropdown-item">
-                                <input type="checkbox" class="activities-filter filter-checkbox" value="" id="activities-checkbox">
-                                <label class="form-check-label" id="activities-checkbox-label" for="activities-checkbox">Activities</label>
-                            </div>
+                                <div class="dropdown-menu" aria-labelledby="filter-dropdown-btn">
+                                    <div class="dropdown-item">
+                                        <input type="checkbox" class="activities-filter filter-checkbox" value="" id="activities-checkbox">
+                                        <label class="form-check-label" id="activities-checkbox-label" for="activities-checkbox">Activities</label>
+                                    </div>
 
-                            <div class="dropdown-item">
-                                <input type="checkbox" class="food-drink-filter filter-checkbox" value="" id="food-drink-checkbox">
-                                <label class="form-check-label" id="food-drink-checkbox-label" for="food-drink-checkbox"> Food & Drink</label>
-                            </div>
+                                    <div class="dropdown-item">
+                                        <input type="checkbox" class="food-drink-filter filter-checkbox" value="" id="food-drink-checkbox">
+                                        <label class="form-check-label" id="food-drink-checkbox-label" for="food-drink-checkbox"> Food & Drink</label>
+                                    </div>
 
-                            <div class="dropdown-item">
-                                <input type="checkbox" value="" class="accommodation-filter filter-checkbox" id="accommodation-checkbox">
-                                <label class="form-check-label" id="accommodation-checkbox-label" for="accommodation-checkbox"> Accommodation</label>
+                                    <div class="dropdown-item">
+                                        <input type="checkbox" value="" class="accommodation-filter filter-checkbox" id="accommodation-checkbox">
+                                        <label class="form-check-label" id="accommodation-checkbox-label" for="accommodation-checkbox"> Accommodation</label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </li>
+                        </li>
 
-                <li class="list-inline-item">
-                    <!-- Button trigger modal -->
-                    <button type="button" id="modal-btn" class="btn btn-primary" data-toggle="modal" data-target="#how-it-works-modal">
-  How it works
+                        <li class="list-inline-item">
+                            <!-- Button trigger modal -->
+                            <button type="button" id="modal-btn" class="btn btn-warning" data-toggle="modal" data-target="#how-it-works-modal">
+                                <i class="material-icons">
+help_outline
+</i>
+ How it Works
 </button>
 
 
-                    <!-- Modal -->
-                    <!--From Bootstrap: https://getbootstrap.com/docs/4.0/components/modal/-->
-                    <div class="modal fade how-it-works-section" id="how-it-works-modal" tabindex="-1" role="dialog" aria-labelledby="how-it-works-modal-label" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title how-it-works-title" id="how-it-works-modal-title">How it Works</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <!-- Modal -->
+                            <!--From Bootstrap: https://getbootstrap.com/docs/4.0/components/modal/-->
+                            <div class="modal fade how-it-works-section" id="how-it-works-modal" tabindex="-1" role="dialog" aria-labelledby="how-it-works-modal-label" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title how-it-works-title" id="how-it-works-modal-title">How it Works</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-                                </div>
-                                <div class="modal-body">
-                                     <ul class="instructions-list">
-                                        <li>Find your holiday destination using the map's search box</li>
-                                        <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
-                                        <li>Click the button again to remove those locations from the map</li>
-                                        <li>Click on a location to learn more about it</li>
-                                    </ul>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    
+                                        </div>
+                                        <div class="modal-body">
+                                            <ul class="instructions-list">
+                                                <li>Find your holiday destination using the map's search box</li>
+                                                <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
+                                                <li>Click the button again to remove those locations from the map</li>
+                                                <li>Click on a location to learn more about it</li>
+                                            </ul>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </li>
+
                     </div>
-                </li>
 
-
+                </div>
             </div>
         </div>
     </header>
@@ -118,7 +129,7 @@
                     <button type="button" id="search-btn" class="btn hide btn-outline-warning">Search this Area</button>
 
                     <!--map-->
-                    <div class="col-xs-12 col-sm-9" id="map-col">
+                    <div class="col-xs-12 col-md-9" id="map-col">
                         <!--Alerts from bootstrap documentation https://getbootstrap.com/docs/4.0/components/alerts/-->
                         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
                         <div class="alert alert-info hide" id="searching-alert" role="alert">
@@ -136,17 +147,18 @@
                     </div>
 
                     <!--cards-->
-                    <div class="col-sm-3 d-none d-sm-block" id="cards-col">
+                    <!--TODO: Bootstrap source-->
+                    <div class="col-md-3 d-none d-md-block" id="cards-col">
                         <aside id="cards-content">
-                             <div id="card-col-instructions" class="how-it-works-section">
-                                    <h3 id="how-it-works-cards-title" class="how-it-works-title">How it Works:</h3>
-                                    <ul class="instructions-list">
-                                        <li>Find your holiday destination using the map's search box</li>
-                                        <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
-                                        <li>Click the button again to remove those locations from the map</li>
-                                        <li>Click on a location to learn more about it</li>
-                                    </ul>
-                                </div>
+                            <div id="card-col-instructions" class="how-it-works-section">
+                                <h3 id="how-it-works-cards-title" class="how-it-works-title">How it Works:</h3>
+                                <ul class="instructions-list">
+                                    <li>Find your holiday destination using the map's search box</li>
+                                    <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
+                                    <li>Click the button again to remove those locations from the map</li>
+                                    <li>Click on a location to learn more about it</li>
+                                </ul>
+                            </div>
                             <div class="card-group">
 
                             </div>

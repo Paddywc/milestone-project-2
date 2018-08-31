@@ -3,6 +3,8 @@
 $tablet-width: 768px;
 $desktop-width: 1025px;
 
+$header-height: 10vh;
+
 $header-background-color: #929191;
 
 $title-font: 'EB Garamond',
@@ -21,6 +23,14 @@ $accommodation-background-color:#90ccf4;
 $accommodation-font-color:#FAFDFF;
 $accommodation-title-color: #FF8E00;
 
+$modal-btn-background-color: #FFE580;
+$modal-btn-font-color:#A97217;
+
+$dropdown-btn-background-color: #A7437C;
+$dropdown-btn-font-color: #FAECF4;
+
+$cards-col-background-color: #fbe8a6;
+$cards-col-how-it-works-font-color: #656464;
 
 @mixin tablet {
   @media (min-width: $tablet-width) and (max-width: $desktop-width - 1px) {
@@ -37,18 +47,19 @@ $accommodation-title-color: #FF8E00;
 @mixin responsive-font-size($mobile-font,
 $tablet-font,
 $desktop-font) {
-  font-size: calc(#{$mobile-font}vmin+#{$mobile-font}vmax);
+  font-size: calc(#{$mobile-font}vmin + #{$mobile-font}vmax);
   @include tablet() {
-    font-size: calc(#{$tablet-font}vmin+#{$tablet-font}vmax);
+    font-size: calc(((#{$tablet-font}vw * 2)/3) + #{$tablet-font}vmax);
   }
   @include desktop() {
-    font-size: calc(#{$desktop-font}vmin+#{$desktop-font}vmax);
+    font-size: calc(((#{$desktop-font}vw * 2)/3) + #{$desktop-font}vmax);
   }
 }
 
 @mixin alert-positioning {
   width: 100%;
   position: absolute;
+  z-index: 110;
 }
 
 @mixin align-filter-icon {
@@ -60,131 +71,210 @@ $desktop-font) {
   font-family: $title-font;
 }
 
-header {
-
-  background-color: gray;
-
-  #header-title {
-    font-family: $title-font;
-    color: $title-font-color;
-    @include responsive-font-size(1.3,
-    1.3,
-    1.5)
+@mixin activities-card-colors {
+  background-color: $activities-background-color;
+  color: $activities-font-color;
+  .card-title {
+    color: $activities-title-color;
   }
-  #buttons-prefix {
-    font-family: $title-font;
-    color: $title-font-color;
-    display: none;
-    @include tablet() {
-      display: block;
-    }
-    @include desktop() {
-      display: block;
-    }
-  }
-  .btn-group {
-    display: none;
-    @include tablet() {
-      display: inline-flex;
-    }
-    @include desktop() {
-      display: inline-flex;
-    }
-    .btn {
-      margin-right: 1em;
-      &:hover {
-        cursor: pointer;
-      }
-    }
-    #activities-btn {
-
-      &:before {
-        // Icon used on map, except resized (24px) and matching font color
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD0SURBVEhL7ZOxDcIwEEVT0rIADdBQswULUNPS0cAASFCxDiUbUCS2IyGkrECRlph/l09DECLYBUWe9KXLv/jubMtJRzQqa8eVc1eVMSPa8UDhlXfOiySmHQ/u4KLKsiHtODwnfxXT4Xhr95i8hM5UKR7TcUDBG47pIJKYdjxQ+I7JtyrEtOPgi6LHc99QXjymw/Fp2peimH4p0gbwmA7HGzPQBtYuRNoAHtPh4OVOuIO5SGN4TIdT5fmUDWYijeEx/TsoVF/oB+HIdvy9PShQN8CjeqtYDfjZ4L8b4DLX0FGL1HFDbHCSmMu+Rxa3EZd1tCVJHlRQfnGeBjQuAAAAAElFTkSuQmCC");
-        @include align-filter-icon();
-      }
-      &.disabled {
-        background-color: $activities-background-color;
-        color: $activities-font-color;
-        border-color: $activities-background-color;
-      } // Overriding Bootstrap default color 
-      &.active {
-        color: $activities-font-color;
-      }
-
-    }
-    #food-drink-btn {
-      color: #fff;
-      &:before {
-        // Icon used on map, except resized (24px) and matching font color
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHHSURBVEhL7ZU7S8NQFMerICIoSHXTQf0AgoODIijiIHUTHKR+ACcHBx+Lqw6Cm7p1dOm3UAShW4dKQWrvTfFR15KHeo//mx5DY5rWiHWQ/OCQe57/m9skTcR0BFWTo8qSu1HM1+eIede3RTos54Oc8hzZkqJYYx+EDrUPgcuwnA8vackLMo2lVoaa/O8JNkt+odXQWNDj/wsqx5j9vqC4xmDHXTtiut4nj13fFlnkq+7aFMtuzpL72vehzPtxFsxyqClE1I2BzxC4075S1QH472TJnM4RPfWrmhhxc7Y4YcGU9gOg4BbNNf2F4FAAso01HnLKIX2MGY5l9MaVMoaUVd7GrFfMLBDlerjUD5JpbrxRSiQ57KFsY0ofl94UmeUJDuMuRRKxK93baDiFCmySy5qDxjMufsD6AOIrsFWsz3G1cX3Dxta53EOpYi96NmCPbr8ldogqw5wOB79DFwZvoeGlcbf1TYiCMuUilzYFvd5TGgkcUx+aUyxUxFM8ozfD6VB+LPiJK4gh7LYlFmxLxwXJLI35/nDrgnlfjEqDXB4guqAl93RDS8NHmcsD/OAO5QLZ4qil4RS4PABen01dw27MX5BIfAA0cLqEt84w7gAAAABJRU5ErkJggg==");
-        @include align-filter-icon();
-      }
-      &.disabled {
-        background-color: $food-drink-background-color;
-        color: $food-drink-font-color;
-        border-color: $food-drink-background-color;
-      } // Overriding Bootstrap default color 
-      &.active {
-        color: $food-drink-font-color;
-      }
-    }
-
-    #accommodation-btn {
-      &:before {
-        // Icon used on map, except resized (24px) and matching font color
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADYSURBVEhL7ZTREcIgDIZZxScdwU3cRN1AX3QJh3CSPvneEbRFCIZe2gJNKYqPfHe5K8mfP0DvEIWfaADWUsGj1XCi1IQUDYttbBXUGE+pjUGDK5UGGM2FSnGcxroxZmPNwyFdntfEh4TmlBbukNCcJK6GH/ICWHGNPYMBXsmiRpszpUbwZ+1tkWvskRpuKRrcwJuWI1KZo22mJUuWxi1IgC2e6DD5/lLj4TX/6dtjtuCQpfF2Ua5oaUC5ougAe9S5wLfmnqoh2xF8P3YYqjPIDQUV2RZSEOIDMqz/BGgyGoIAAAAASUVORK5CYII=");
-        @include align-filter-icon();
-      }
-
-      &.disabled {
-        background-color: $accommodation-background-color;
-        color: $accommodation-font-color;
-        border-color: $accommodation-background-color;
-      } // Overriding Bootstrap default color 
-      &.active {
-        color: $accommodation-font-color;
-      }
-    }
-
-  }
-
-  .dropdown {
-    @include tablet() {
-      display: none;
-    }
-    @include desktop() {
-      display: none;
-    }
-
-
-    #activities-checkbox-label {
-      &:before {
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII=");
-        @include align-filter-icon();
-      }
-    }
-    #food-drink-checkbox-label {
-      &:before {
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC");
-        @include align-filter-icon();
-      }
-    }
-    #accommodation-checkbox-label {
-      &:before {
-        content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg==");
-        @include align-filter-icon();
-      }
-    }
-  }
-
 }
+
+@mixin accommodation-card-colors {
+  background-color: $accommodation-background-color;
+  color: $accommodation-font-color;
+  .card-title {
+    color: $accommodation-title-color;
+  }
+}
+
+@mixin food-drink-card-colors {
+  background-color: $food-drink-background-color;
+  color: $food-drink-font-color;
+  .card-title {
+    color: $food-drink-title-color;
+  }
+}
+
+
+
+header {
+  height: $header-height;
+
+
+  .container-fluid,
+  .list-inline,
+  .row {
+    height: 100%;
+  }
+
+
+
+  background-color: #929191;
+  .title-section {
+    margin-left: 1%;
+    #header-title {
+      font-family: $title-font;
+      color: $title-font-color;
+      @include responsive-font-size(1.3,
+      1.6,
+      1.7)
+    }
+  }
+
+  .filter-section {
+    margin-left: auto;
+    #buttons-prefix {
+      transform: translateY(12%);
+      font-family: $title-font;
+      color: $title-font-color;
+      display: none;
+      @include responsive-font-size(0,
+      1.1,
+      1.2);
+      @include tablet() {
+        display: block;
+      }
+      @include desktop() {
+        display: block;
+      }
+    }
+    .btn-group {
+      display: none;
+      @include tablet() {
+        display: inline-flex;
+      }
+      @include desktop() {
+        display: inline-flex;
+      }
+      .btn {
+        height: $header-height;
+        @include responsive-font-size(0.8,
+        1,
+        1);
+        border-radius: 0.25rem!important; //Overrides removal of certain borders in Bootstrap .btn-group
+        margin-right: 1em;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      #activities-btn {
+
+        &:before {
+          // Icon used on map, except resized (24px) and matching font color
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD0SURBVEhL7ZOxDcIwEEVT0rIADdBQswULUNPS0cAASFCxDiUbUCS2IyGkrECRlph/l09DECLYBUWe9KXLv/jubMtJRzQqa8eVc1eVMSPa8UDhlXfOiySmHQ/u4KLKsiHtODwnfxXT4Xhr95i8hM5UKR7TcUDBG47pIJKYdjxQ+I7JtyrEtOPgi6LHc99QXjymw/Fp2peimH4p0gbwmA7HGzPQBtYuRNoAHtPh4OVOuIO5SGN4TIdT5fmUDWYijeEx/TsoVF/oB+HIdvy9PShQN8CjeqtYDfjZ4L8b4DLX0FGL1HFDbHCSmMu+Rxa3EZd1tCVJHlRQfnGeBjQuAAAAAElFTkSuQmCC");
+          @include align-filter-icon();
+        }
+        &.disabled {
+          background-color: $activities-background-color;
+          color: $activities-font-color;
+          border-color: $activities-background-color;
+        } // Overriding Bootstrap default color 
+        &.active {
+          color: $activities-font-color;
+        }
+
+      }
+      #food-drink-btn {
+        color: #fff;
+        &:before {
+          // Icon used on map, except resized (24px) and matching font color
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHHSURBVEhL7ZU7S8NQFMerICIoSHXTQf0AgoODIijiIHUTHKR+ACcHBx+Lqw6Cm7p1dOm3UAShW4dKQWrvTfFR15KHeo//mx5DY5rWiHWQ/OCQe57/m9skTcR0BFWTo8qSu1HM1+eIede3RTos54Oc8hzZkqJYYx+EDrUPgcuwnA8vackLMo2lVoaa/O8JNkt+odXQWNDj/wsqx5j9vqC4xmDHXTtiut4nj13fFlnkq+7aFMtuzpL72vehzPtxFsxyqClE1I2BzxC4075S1QH472TJnM4RPfWrmhhxc7Y4YcGU9gOg4BbNNf2F4FAAso01HnLKIX2MGY5l9MaVMoaUVd7GrFfMLBDlerjUD5JpbrxRSiQ57KFsY0ofl94UmeUJDuMuRRKxK93baDiFCmySy5qDxjMufsD6AOIrsFWsz3G1cX3Dxta53EOpYi96NmCPbr8ldogqw5wOB79DFwZvoeGlcbf1TYiCMuUilzYFvd5TGgkcUx+aUyxUxFM8ozfD6VB+LPiJK4gh7LYlFmxLxwXJLI35/nDrgnlfjEqDXB4guqAl93RDS8NHmcsD/OAO5QLZ4qil4RS4PABen01dw27MX5BIfAA0cLqEt84w7gAAAABJRU5ErkJggg==");
+          @include align-filter-icon();
+        }
+        &.disabled {
+          background-color: $food-drink-background-color;
+          color: $food-drink-font-color;
+          border-color: $food-drink-background-color;
+        } // Overriding Bootstrap default color 
+        &.active {
+          color: $food-drink-font-color;
+        }
+      }
+
+      #accommodation-btn {
+        &:before {
+          // Icon used on map, except resized (24px) and matching font color
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADYSURBVEhL7ZTREcIgDIZZxScdwU3cRN1AX3QJh3CSPvneEbRFCIZe2gJNKYqPfHe5K8mfP0DvEIWfaADWUsGj1XCi1IQUDYttbBXUGE+pjUGDK5UGGM2FSnGcxroxZmPNwyFdntfEh4TmlBbukNCcJK6GH/ICWHGNPYMBXsmiRpszpUbwZ+1tkWvskRpuKRrcwJuWI1KZo22mJUuWxi1IgC2e6DD5/lLj4TX/6dtjtuCQpfF2Ua5oaUC5ougAe9S5wLfmnqoh2xF8P3YYqjPIDQUV2RZSEOIDMqz/BGgyGoIAAAAASUVORK5CYII=");
+          @include align-filter-icon();
+        }
+
+        &.disabled {
+          background-color: $accommodation-background-color;
+          color: $accommodation-font-color;
+          border-color: $accommodation-background-color;
+        } // Overriding Bootstrap default color 
+        &.active {
+          color: $accommodation-font-color;
+        }
+      }
+
+    }
+
+
+    #modal-btn {
+      height: $header-height;
+      background-color: $modal-btn-background-color;
+      color: $modal-btn-font-color;  
+      @include responsive-font-size(0.9,
+      1,
+      1.2);
+      .material-icons {
+        display: block;
+      }
+    }
+
+    .dropdown-section {
+      @include tablet() {
+        display: none;
+      }
+      @include desktop() {
+        display: none;
+      }
+
+      #filter-dropdown-btn {
+        height: calc($header-height/2);
+        background-color: $dropdown-btn-background-color;
+        color: $dropdown-btn-font-color;
+        border-color: $dropdown-btn-background-color;
+        @include responsive-font-size(1.1,
+        0,
+        0);
+      }
+
+      #activities-checkbox-label {
+        &:before {
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII=");
+          @include align-filter-icon();
+        }
+      }
+      #food-drink-checkbox-label {
+        &:before {
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC");
+          @include align-filter-icon();
+        }
+      }
+      #accommodation-checkbox-label {
+        &:before {
+          content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg==");
+          @include align-filter-icon();
+        }
+      }
+    }
+  }
+}
+
 
 $body-height: 90vh;
 
 #map {
-  width: 75vw;
+  width: 100vw;
   height: $body-height;
+  @include tablet() {
+    width: 75vw;
+  }
+  @include desktop() {
+    width: 75vw;
+  }
 }
 
 #map-col {
@@ -212,57 +302,70 @@ $body-height: 90vh;
   display: none !important;
 }
 
+
+
+
 #cards-col {
+  padding: 0;
+  z-index: 0;
+  background-color: $cards-col-background-color;
   height: $body-height;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   #card-col-instructions {
     position: absolute;
     z-index: -10;
+    color: $cards-col-how-it-works-font-color;
   }
   .aside-card {
     flex: none;
     width: 100%;
-  }
-  .activities {
-    background-color: $activities-background-color;
-    color: $activities-font-color;
-    .card-title {
-      color: $activities-title-color;
+
+    &.activities {
+      @include activities-card-colors();
     }
-  }
-  .accommodation {
-    background-color: $accommodation-background-color;
-    color: $accommodation-font-color;
-    .card-title {
-      color: $accommodation-title-color;
+    &.accommodation {
+      @include accommodation-card-colors();
     }
-  }
-  .foodAndDrink {
-    background-color: $food-drink-background-color;
-    color: $food-drink-font-color;
-    .card-title {
-      color: $food-drink-title-color;
+    &.foodAndDrink {
+      @include food-drink-card-colors();
     }
-  }
+    &.highlight {
+      filter: saturate(3);
 
-
-  .highlight {
-    filter: saturate(3);
-
-
-    .card-title {
-      &:before {
-        font-family: 'Material Icons';
-        content: "star";
-        display: inline;
-        vertical-align: bottom;
-
+      .card-title {
+        &:before {
+          font-family: 'Material Icons';
+          content: "star";
+          display: inline;
+          vertical-align: bottom;
+        }
       }
-    }
 
+    }
   }
 
+  .card-img-top {
+    max-height: 15em;
+    object-fit: cover;
+  }
+
+
+}
+
+
+
+.infowindow-card {
+  max-width: 40vw;
+  border: none !important; //Overrides Bootstrap default  
+  margin-left: 10px;
+  text-align: center;
+
+  .card-img-top {
+    max-height: 10em;
+    object-fit: cover;
+    margin-left: 10px;
+  }
 }
 
 .how-it-works-section {
@@ -274,7 +377,7 @@ $body-height: 90vh;
     padding-left: 2%;
     color: red;
     @include responsive-font-size(0,
-    1,
+    1.3,
     1.5);
     @include how-it-works-title();
   }

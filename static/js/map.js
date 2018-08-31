@@ -8,9 +8,10 @@ let destinationExplorerData = {
 
 
 function userIsOnMobile() {
-    // 567px width is Bootstrap SM- the screen width where cards appear on the page
-    let windowWidth = $(window).width();
-    if (windowWidth < 567) {
+    // 768px width is Bootstrap MD- the screen width where cards appear on the page
+    let windowWidth = window.innerWidth;
+
+    if (windowWidth < 768) {
         return true;
     }
     else {
@@ -448,7 +449,7 @@ function createInfoWindowContent(marker, yelpData) {
     });
 
     let infoWindowContent = `
-       <div class="card infoWindow-card ${fullBusinessData.businessTypes[0]}" id="${fullBusinessData.yelpId}">
+       <div class="card infowindow-card ${fullBusinessData.businessTypes[0]}" id="${fullBusinessData.yelpId}">
   
       <img class="card-img-top" src="${fullBusinessData.img}" alt="Business Image">
       <div class="card-body">
@@ -475,7 +476,7 @@ function createAndViewMarkerInfoWindow(marker) {
 
     let infoWindowContent = createInfoWindowContent(marker, destinationExplorerData.currentYelpData);
     let infoWindow = new google.maps.InfoWindow({
-        content: infoWindowContent
+        content: infoWindowContent,
     });
     infoWindow.open(destinationExplorerData.map, marker);
 
@@ -677,10 +678,11 @@ function viewOnMap(businessId) {
 }
 
 
-function checkIfCardAlreadyExists(business){
-    if($(`#${business.yelpId}`).length > 0){
+function checkIfCardAlreadyExists(business) {
+    if ($(`#${business.yelpId}`).length > 0) {
         return true;
-    }else{
+    }
+    else {
         return false;
     }
 }
@@ -691,8 +693,8 @@ function createNewCardsContent(yelpData) {
     if (yelpData.length > 0) {
 
         yelpData.forEach(function(business) {
-                if (!checkIfCardAlreadyExists(business)) {
-                    let card = `
+            if (!checkIfCardAlreadyExists(business)) {
+                let card = `
       <div class="card aside-card ${business.businessTypes[0]}" id="${business.yelpId}">
   
       <img class="card-img-top" src="${business.img}" alt="Business Image">
@@ -712,8 +714,8 @@ function createNewCardsContent(yelpData) {
       </div>
       `;
 
-                    cardsContentString += card;
-                }
+                cardsContentString += card;
+            }
         });
     }
 
@@ -754,8 +756,6 @@ function getRemovedData(newYelpData, oldYelpData) {
 
 
     return removedData;
-
-
 }
 
 
