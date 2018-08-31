@@ -677,12 +677,22 @@ function viewOnMap(businessId) {
 }
 
 
+function checkIfCardAlreadyExists(business){
+    if($(`#${business.yelpId}`).length > 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 
 function createNewCardsContent(yelpData) {
     let cardsContentString = "";
     if (yelpData.length > 0) {
+
         yelpData.forEach(function(business) {
-            let card = `
+                if (!checkIfCardAlreadyExists(business)) {
+                    let card = `
       <div class="card aside-card ${business.businessTypes[0]}" id="${business.yelpId}">
   
       <img class="card-img-top" src="${business.img}" alt="Business Image">
@@ -702,7 +712,8 @@ function createNewCardsContent(yelpData) {
       </div>
       `;
 
-            cardsContentString += card;
+                    cardsContentString += card;
+                }
         });
     }
 
