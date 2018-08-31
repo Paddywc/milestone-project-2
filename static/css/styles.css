@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700");
+@import url("https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700|Maitree|Overlock");
 header {
   background-color: gray; }
   header #header-title {
@@ -119,13 +119,48 @@ header {
   #cards-col .activities {
     background-color: #f78888;
     color: #FFD6D6; }
+    #cards-col .activities .card-title {
+      color: #FFEF50; }
   #cards-col .accommodation {
     background-color: #90ccf4;
     color: #FAFDFF; }
+    #cards-col .accommodation .card-title {
+      color: #FF8E00; }
   #cards-col .foodAndDrink {
     background-color: #f3d250;
     color: #FFF9E3; }
+    #cards-col .foodAndDrink .card-title {
+      color: #291A7A; }
   #cards-col .highlight {
-    background-color: blue; }
+    filter: saturate(3); }
+    #cards-col .highlight .card-title:before {
+      font-family: 'Material Icons';
+      content: "star";
+      display: inline;
+      vertical-align: bottom; }
+
+.how-it-works-section #how-it-works-cards-title {
+  padding-left: 2%;
+  color: red;
+  font-size: calc(0vmin+0vmax);
+  font-family: "EB Garamond", serif; }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .how-it-works-section #how-it-works-cards-title {
+      font-size: calc(1vmin+1vmax); } }
+  @media (min-width: 1025px) {
+    .how-it-works-section #how-it-works-cards-title {
+      font-size: calc(1.5vmin+1.5vmax); } }
+.how-it-works-section #how-it-works-modal-title {
+  font-family: "EB Garamond", serif; }
+.how-it-works-section .instructions-list {
+  list-style-type: circle; }
+  .how-it-works-section .instructions-list li {
+    padding: 0.2em; }
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .how-it-works-section .instructions-list li {
+        padding: 0.8em 0.7em 0.8em 0.2em; } }
+    @media (min-width: 1025px) {
+      .how-it-works-section .instructions-list li {
+        padding: 1em 0.7em 1em 0.2em; } }
 
 /*# sourceMappingURL=styles.css.map */

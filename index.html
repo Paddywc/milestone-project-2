@@ -17,6 +17,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/jasmine-html.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/boot.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/3.1.0/jasmine.css" />
+    
+    <!--Google font icons-->
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 
 
 </head>
@@ -76,21 +80,26 @@
 
                     <!-- Modal -->
                     <!--From Bootstrap: https://getbootstrap.com/docs/4.0/components/modal/-->
-                    <div class="modal fade" id="how-it-works-modal" tabindex="-1" role="dialog" aria-labelledby="how-it-works-modal-label" aria-hidden="true">
+                    <div class="modal fade how-it-works-section" id="how-it-works-modal" tabindex="-1" role="dialog" aria-labelledby="how-it-works-modal-label" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="how-it-works-modal-label">Modal title</h5>
+                                    <h5 class="modal-title how-it-works-title" id="how-it-works-modal-title">How it Works</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
                                 </div>
                                 <div class="modal-body">
-                                    ...
+                                     <ul class="instructions-list">
+                                        <li>Find your holiday destination using the map's search box</li>
+                                        <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
+                                        <li>Click the button again to remove those locations from the map</li>
+                                        <li>Click on a location to learn more about it</li>
+                                    </ul>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -129,17 +138,16 @@
                     <!--cards-->
                     <div class="col-sm-3 d-none d-sm-block" id="cards-col">
                         <aside id="cards-content">
-                            <div class="card-group">
-                                <div id="card-col-instructions">
-                                    <h3 id="how-it-works-tile">How it Works:</h3>
-                                    <ul id="instructions-list">
+                             <div id="card-col-instructions" class="how-it-works-section">
+                                    <h3 id="how-it-works-cards-title" class="how-it-works-title">How it Works:</h3>
+                                    <ul class="instructions-list">
                                         <li>Find your holiday destination using the map's search box</li>
                                         <li>Click on one of the buttons to display thing to do, places to eat and drink, or accommodation on the map</li>
                                         <li>Click the button again to remove those locations from the map</li>
                                         <li>Click on a location to learn more about it</li>
                                     </ul>
                                 </div>
-
+                            <div class="card-group">
 
                             </div>
                         </aside>

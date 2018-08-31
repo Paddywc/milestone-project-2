@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700');
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700|Maitree|Overlock');
 
 $tablet-width: 768px;
 $desktop-width: 1025px;
@@ -11,12 +11,15 @@ $title-font-color: #F1EFEF;
 
 $activities-background-color:#f78888;
 $activities-font-color:#FFD6D6;
+$activities-title-color: #FFEF50;
 
 $food-drink-background-color: #f3d250;
 $food-drink-font-color: #FFF9E3;
+$food-drink-title-color: #291A7A;
 
 $accommodation-background-color:#90ccf4;
 $accommodation-font-color:#FAFDFF;
+$accommodation-title-color: #FF8E00;
 
 
 @mixin tablet {
@@ -31,15 +34,15 @@ $accommodation-font-color:#FAFDFF;
   }
 }
 
-@mixin responsive-font-size($smallFont,
-$tabletFont,
-$desktopFont) {
-  font-size: calc(#{$smallFont}vmin+#{$smallFont}vmax);
+@mixin responsive-font-size($mobile-font,
+$tablet-font,
+$desktop-font) {
+  font-size: calc(#{$mobile-font}vmin+#{$mobile-font}vmax);
   @include tablet() {
-    font-size: calc(#{$tabletFont}vmin+#{$tabletFont}vmax);
+    font-size: calc(#{$tablet-font}vmin+#{$tablet-font}vmax);
   }
   @include desktop() {
-    font-size: calc(#{$desktopFont}vmin+#{$desktopFont}vmax);
+    font-size: calc(#{$desktop-font}vmin+#{$desktop-font}vmax);
   }
 }
 
@@ -51,6 +54,10 @@ $desktopFont) {
 @mixin align-filter-icon {
   display: inline-block;
   transform: translateY(10%);
+}
+
+@mixin how-it-works-title {
+  font-family: $title-font;
 }
 
 header {
@@ -111,7 +118,7 @@ header {
       &:before {
         // Icon used on map, except resized (24px) and matching font color
         content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHHSURBVEhL7ZU7S8NQFMerICIoSHXTQf0AgoODIijiIHUTHKR+ACcHBx+Lqw6Cm7p1dOm3UAShW4dKQWrvTfFR15KHeo//mx5DY5rWiHWQ/OCQe57/m9skTcR0BFWTo8qSu1HM1+eIede3RTos54Oc8hzZkqJYYx+EDrUPgcuwnA8vackLMo2lVoaa/O8JNkt+odXQWNDj/wsqx5j9vqC4xmDHXTtiut4nj13fFlnkq+7aFMtuzpL72vehzPtxFsxyqClE1I2BzxC4075S1QH472TJnM4RPfWrmhhxc7Y4YcGU9gOg4BbNNf2F4FAAso01HnLKIX2MGY5l9MaVMoaUVd7GrFfMLBDlerjUD5JpbrxRSiQ57KFsY0ofl94UmeUJDuMuRRKxK93baDiFCmySy5qDxjMufsD6AOIrsFWsz3G1cX3Dxta53EOpYi96NmCPbr8ldogqw5wOB79DFwZvoeGlcbf1TYiCMuUilzYFvd5TGgkcUx+aUyxUxFM8ozfD6VB+LPiJK4gh7LYlFmxLxwXJLI35/nDrgnlfjEqDXB4guqAl93RDS8NHmcsD/OAO5QLZ4qil4RS4PABen01dw27MX5BIfAA0cLqEt84w7gAAAABJRU5ErkJggg==");
-         @include align-filter-icon();
+        @include align-filter-icon();
       }
       &.disabled {
         background-color: $food-drink-background-color;
@@ -127,7 +134,7 @@ header {
       &:before {
         // Icon used on map, except resized (24px) and matching font color
         content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADYSURBVEhL7ZTREcIgDIZZxScdwU3cRN1AX3QJh3CSPvneEbRFCIZe2gJNKYqPfHe5K8mfP0DvEIWfaADWUsGj1XCi1IQUDYttbBXUGE+pjUGDK5UGGM2FSnGcxroxZmPNwyFdntfEh4TmlBbukNCcJK6GH/ICWHGNPYMBXsmiRpszpUbwZ+1tkWvskRpuKRrcwJuWI1KZo22mJUuWxi1IgC2e6DD5/lLj4TX/6dtjtuCQpfF2Ua5oaUC5ougAe9S5wLfmnqoh2xF8P3YYqjPIDQUV2RZSEOIDMqz/BGgyGoIAAAAASUVORK5CYII=");
-         @include align-filter-icon();
+        @include align-filter-icon();
       }
 
       &.disabled {
@@ -154,19 +161,19 @@ header {
     #activities-checkbox-label {
       &:before {
         content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII=");
-         @include align-filter-icon();
+        @include align-filter-icon();
       }
     }
     #food-drink-checkbox-label {
       &:before {
         content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC");
-         @include align-filter-icon();
+        @include align-filter-icon();
       }
     }
     #accommodation-checkbox-label {
       &:before {
         content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg==");
-         @include align-filter-icon();
+        @include align-filter-icon();
       }
     }
   }
@@ -208,9 +215,9 @@ $body-height: 90vh;
 #cards-col {
   height: $body-height;
   overflow-y: scroll;
-  
-  #card-col-instructions{
-    position:absolute;
+
+  #card-col-instructions {
+    position: absolute;
     z-index: -10;
   }
   .aside-card {
@@ -220,19 +227,75 @@ $body-height: 90vh;
   .activities {
     background-color: $activities-background-color;
     color: $activities-font-color;
+    .card-title {
+      color: $activities-title-color;
+    }
   }
   .accommodation {
     background-color: $accommodation-background-color;
     color: $accommodation-font-color;
+    .card-title {
+      color: $accommodation-title-color;
+    }
   }
   .foodAndDrink {
     background-color: $food-drink-background-color;
     color: $food-drink-font-color;
+    .card-title {
+      color: $food-drink-title-color;
+    }
   }
 
 
-
   .highlight {
-    background-color: blue;
+    filter: saturate(3);
+
+
+    .card-title {
+      &:before {
+        font-family: 'Material Icons';
+        content: "star";
+        display: inline;
+        vertical-align: bottom;
+
+      }
+    }
+
+  }
+
+}
+
+.how-it-works-section {
+
+
+
+
+  #how-it-works-cards-title {
+    padding-left: 2%;
+    color: red;
+    @include responsive-font-size(0,
+    1,
+    1.5);
+    @include how-it-works-title();
+  }
+
+  #how-it-works-modal-title {
+
+    @include how-it-works-title();
+  }
+
+  .instructions-list {
+    list-style-type: circle;
+
+    li {
+      padding: 0.2em;
+      @include tablet() {
+        padding: 0.8em 0.7em 0.8em 0.2em;
+      }
+
+      @include desktop() {
+        padding: 1em 0.7em 1em 0.2em;
+      }
+    }
   }
 }

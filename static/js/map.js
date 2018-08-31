@@ -647,16 +647,17 @@ function hideSearchButton() {
     $("#search-btn").addClass("hide")
 }
 
-function showOrHideModalButton() {
-    if (!userIsOnMobile()) {
-        if ($(".aside-card").length > 0) {
-            $("#modal-btn").removeClass("hide");
-        }
-        else {
-            $("#modal-btn").addClass("hide");
-        }
+let showOrHideModalButton = function() {
+    if (!userIsOnMobile() && $(".aside-card").length === 0) {
+        $("#modal-btn").addClass("hide");
+    }
+    else {
+        $("#modal-btn").removeClass("hide");
     }
 };
+
+
+$(window).resize(showOrHideModalButton);
 
 function viewOnMap(businessId) {
 
