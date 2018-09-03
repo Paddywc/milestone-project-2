@@ -11,10 +11,10 @@ header {
     header .title-section #header-title {
       font-family: "EB Garamond", serif;
       color: #F1EFEF;
-      font-size: calc(1.3vmin + 1.3vmax); }
+      font-size: calc(((1.5vw * 2)/3) + 1.5vmax); }
       @media (min-width: 768px) and (max-width: 1024px) {
         header .title-section #header-title {
-          font-size: calc(((1.6vw * 2)/3) + 1.6vmax); } }
+          font-size: calc(((1.4vw * 2)/3) + 1.4vmax); } }
       @media (min-width: 1025px) {
         header .title-section #header-title {
           font-size: calc(((1.7vw * 2)/3) + 1.7vmax); } }
@@ -25,7 +25,7 @@ header {
       font-family: "EB Garamond", serif;
       color: #F1EFEF;
       display: none;
-      font-size: calc(0vmin + 0vmax); }
+      font-size: calc(((0vw * 2)/3) + 0vmax); }
       @media (min-width: 768px) and (max-width: 1024px) {
         header .filter-section #buttons-prefix {
           font-size: calc(((1.1vw * 2)/3) + 1.1vmax); } }
@@ -48,12 +48,13 @@ header {
           display: inline-flex; } }
       header .filter-section .btn-group .btn {
         height: 10vh;
-        font-size: calc(0.8vmin + 0.8vmax);
+        font-family: "Maitree", serif;
+        font-size: calc(((0.8vw * 2)/3) + 0.8vmax);
         border-radius: 0.25rem !important;
         margin-right: 1em; }
         @media (min-width: 768px) and (max-width: 1024px) {
           header .filter-section .btn-group .btn {
-            font-size: calc(((1vw * 2)/3) + 1vmax); } }
+            font-size: calc(((0.7vw * 2)/3) + 0.7vmax); } }
         @media (min-width: 1025px) {
           header .filter-section .btn-group .btn {
             font-size: calc(((1vw * 2)/3) + 1vmax); } }
@@ -95,10 +96,11 @@ header {
       height: 10vh;
       background-color: #FFE580;
       color: #A97217;
-      font-size: calc(0.9vmin + 0.9vmax); }
+      font-family: "Maitree", serif;
+      font-size: calc(((0.9vw * 2)/3) + 0.9vmax); }
       @media (min-width: 768px) and (max-width: 1024px) {
         header .filter-section #modal-btn {
-          font-size: calc(((1vw * 2)/3) + 1vmax); } }
+          font-size: calc(((0.8vw * 2)/3) + 0.8vmax); } }
       @media (min-width: 1025px) {
         header .filter-section #modal-btn {
           font-size: calc(((1.2vw * 2)/3) + 1.2vmax); } }
@@ -115,7 +117,8 @@ header {
       background-color: #A7437C;
       color: #FAECF4;
       border-color: #A7437C;
-      font-size: calc(1.1vmin + 1.1vmax); }
+      font-family: "Maitree", serif;
+      font-size: calc(((1.3vw * 2)/3) + 1.3vmax); }
       @media (min-width: 768px) and (max-width: 1024px) {
         header .filter-section .dropdown-section #filter-dropdown-btn {
           font-size: calc(((0vw * 2)/3) + 0vmax); } }
@@ -178,6 +181,16 @@ header {
   #cards-col .aside-card {
     flex: none;
     width: 100%; }
+    #cards-col .aside-card .card-title {
+      font-family: "EB Garamond", serif;
+      font-weight: 600; }
+    #cards-col .aside-card .card-subtitle {
+      font-family: "Maitree", serif; }
+    #cards-col .aside-card .card-text {
+      font-family: "Overlock", cursive; }
+    #cards-col .aside-card .card-link {
+      font-family: "Overlock", cursive;
+      font-weight: 600; }
     #cards-col .aside-card.activities {
       background-color: #f78888;
       color: #FFD6D6; }
@@ -216,19 +229,42 @@ header {
 
 .how-it-works-section #how-it-works-cards-title {
   padding-left: 2%;
-  color: red;
-  font-size: calc(0vmin + 0vmax);
-  font-family: "EB Garamond", serif; }
+  font-size: calc(((0vw * 2)/3) + 0vmax);
+  font-family: "EB Garamond", serif;
+  color: #D05454;
+  font-size: calc(((2vw * 2)/3) + 2vmax); }
   @media (min-width: 768px) and (max-width: 1024px) {
     .how-it-works-section #how-it-works-cards-title {
       font-size: calc(((1.3vw * 2)/3) + 1.3vmax); } }
   @media (min-width: 1025px) {
     .how-it-works-section #how-it-works-cards-title {
       font-size: calc(((1.5vw * 2)/3) + 1.5vmax); } }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .how-it-works-section #how-it-works-cards-title {
+      font-size: calc(((1.4vw * 2)/3) + 1.4vmax); } }
+  @media (min-width: 1025px) {
+    .how-it-works-section #how-it-works-cards-title {
+      font-size: calc(((1.5vw * 2)/3) + 1.5vmax); } }
 .how-it-works-section #how-it-works-modal-title {
-  font-family: "EB Garamond", serif; }
+  font-family: "EB Garamond", serif;
+  color: #D05454;
+  font-size: calc(((2vw * 2)/3) + 2vmax); }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .how-it-works-section #how-it-works-modal-title {
+      font-size: calc(((1.4vw * 2)/3) + 1.4vmax); } }
+  @media (min-width: 1025px) {
+    .how-it-works-section #how-it-works-modal-title {
+      font-size: calc(((1.5vw * 2)/3) + 1.5vmax); } }
 .how-it-works-section .instructions-list {
-  list-style-type: circle; }
+  list-style-type: circle;
+  font-family: "Overlock", cursive;
+  font-size: calc(((1.5vw * 2)/3) + 1.5vmax); }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .how-it-works-section .instructions-list {
+      font-size: calc(((1vw * 2)/3) + 1vmax); } }
+  @media (min-width: 1025px) {
+    .how-it-works-section .instructions-list {
+      font-size: calc(((0.9vw * 2)/3) + 0.9vmax); } }
   .how-it-works-section .instructions-list li {
     padding: 0.2em; }
     @media (min-width: 768px) and (max-width: 1024px) {
