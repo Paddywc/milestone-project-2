@@ -107,7 +107,7 @@ help_outline
                                             </ul>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <button type="button" id="close-modal-btn" class="btn btn-danger" data-dismiss="modal">Close</button>
 
                                         </div>
                                     </div>
@@ -116,7 +116,7 @@ help_outline
                         </li>
 
                     </div>
-
+     
                 </div>
             </div>
         </div>
@@ -128,7 +128,7 @@ help_outline
                 <div class="row">
                     <button type="button" id="search-btn" class="btn hide btn-outline-warning">Search this Area</button>
 
-                    <!--map-->
+                    <!--Map-->
                     <div class="col-xs-12 col-md-9" id="map-col">
                         <!--Alerts from bootstrap documentation https://getbootstrap.com/docs/4.0/components/alerts/-->
                         <input id="pac-input" class="controls" type="text" placeholder="Search Box">
@@ -147,7 +147,7 @@ help_outline
                     </div>
 
                     <!--cards-->
-                    <!--TODO: Bootstrap source-->
+                    <!--Modal code largly from:https://getbootstrap.com/docs/4.0/components/modal/-->
                     <div class="col-md-3 d-none d-md-block" id="cards-col">
                         <aside id="cards-content">
                             <div id="card-col-instructions" class="how-it-works-section">
@@ -180,7 +180,7 @@ help_outline
 
     <script type="text/javascript" src="/static/js/map.js"></script>
 
-    <!--Google maps api-->
+    <!--Google Maps api-->
     <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js" async defer>
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyCJZTmiWg6Qzq-EG1OlubygegLk0mvFvcI&callback=initMapDestinationExplorer">

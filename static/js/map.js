@@ -36,7 +36,7 @@ function calculateDistanceBetweenTwoCenters(oldCenter, newCenter) {
     return google.maps.geometry.spherical.computeDistanceBetween(oldCenter.center, newCenter.center);
 }
 
-function clearCardsIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInKilometers) {
+function clearDataIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInKilometers) {
     let metersMoved = calculateDistanceBetweenTwoCenters(oldCenter, newCenter);
     if (metersMoved > (distanceInKilometers * 1000)) {
         let interval = setInterval(removeCardsWhenSearchComplete, 200);
@@ -44,6 +44,8 @@ function clearCardsIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceIn
         function removeCardsWhenSearchComplete() {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
                 $(".card-group").empty();
+                showOrHideModalButton();
+                destinationExplorerData.currentYelpData = [];
                 clearInterval(interval);
             }
         }
@@ -54,7 +56,7 @@ function clearCardsIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceIn
 
 // Adds functionality to Google Maps Searcj
 // Code from Google API documentation: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox.
-// Added code to return old and new center and use them in clearCardsIfMovedOverSpecifiedDistance
+// Added code to return old and new center and use them in clearDataIfMovedOverSpecifiedDistance
 function createSearchbox(map) {
     let input = document.getElementById('pac-input');
     let searchBox = new google.maps.places.SearchBox(input)
@@ -104,7 +106,7 @@ function createSearchbox(map) {
         });
         map.fitBounds(bounds);
         let newMapCenter = getMapCenter(map);
-        clearCardsIfMovedOverSpecifiedDistance(oldMapCenter, newMapCenter, 20);
+        clearDataIfMovedOverSpecifiedDistance(oldMapCenter, newMapCenter, 20);
 
 
     });
@@ -179,12 +181,12 @@ function synchronizeButtonsAndCheckboxs(itemClicked) {
 $(".filter-checkbox").click(function() {
 
     synchronizeButtonsAndCheckboxs(this);
-})
+});
 
 
 function getSearchString() {
-    // filters terms for yelp search API
-    // chosen from list of possible categories: https://www.yelp.com/developers/documentation/v3/all_category_list
+    // Filters terms used in Yelp Get request 
+    // Chosen from list of possible categories: https://www.yelp.com/developers/documentation/v3/all_category_list
     let activities = 'streetart,racetracks,sportsteams,theater,opera,museums,festivals,culturalcenter,countryclubs,castles,cabaret,gardens,galleries,active,tours';
     let foodAndDrink = 'food,bars';
     let accommodation = 'guesthouses,campgrounds,hostels,hotels';
@@ -236,7 +238,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 
     function handleError(xhr, status, error) {
         let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error. '
-        displaySearchErrorToUser(errorMessage)
+        displaySearchErrorToUser(errorMessage);
         console.log(errorMessage);
     }
 
@@ -250,7 +252,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 
     return $.ajax({
         type: "GET",
-        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=3000&categories=${searchQuery}`,
+        url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=4000&categories=${searchQuery}`,
         success: function(response) {
             displaySearchCompletedToUser();
             return response;
@@ -421,7 +423,7 @@ function determineBusinessTypes(businessCategories) {
 function determineIconToUse(yelpBusiness) {
 
 
-    // icons to appear as markers on map
+    // Icons to appear as markers on map
     let foodIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC'
     let activitiesIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII='
     let accommodationIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg=='
@@ -587,6 +589,9 @@ function determineBusinessTypesToRemove(buttonPressed) {
     return typeToRemove;
 }
 
+function updateCardClass(business, originalBusinessType, newBusinessType){
+    $(`#${business.yelpId}`).removeClass(originalBusinessType).addClass(newBusinessType);
+}
 
 function checkIfOtherValidCategories(business) {
 
@@ -611,6 +616,7 @@ function checkIfOtherValidCategories(business) {
         for (let i = 1; i < business.businessTypes.length; i++) {
             if (checkIfButtonActive(business.businessTypes[i])) {
                 let newMainType = business.businessTypes[i];
+                updateCardClass(business, originalBusinessType, newMainType);
                 business.businessTypes.splice(i, 1);
                 business.businessTypes[0] = newMainType;
                 business.businessTypes.push(originalBusinessType);
@@ -782,6 +788,7 @@ function removeCards(removedData) {
 }
 
 
+
 function removeDataAndUpdatePage(typeToRemove) {
     let oldYelpData = [];
     oldYelpData = oldYelpData.concat(destinationExplorerData.currentYelpData);
@@ -829,7 +836,7 @@ function initMapDestinationExplorer() {
     showOrHideModalButton();
     destinationExplorerData.map = generateNewMap();
     createSearchbox(destinationExplorerData.map);
-    destinationExplorerData.map.addListener('tilesloaded', function() {
+    destinationExplorerData.map.addListener('idle', function() {
         if ($(".filter-btn").hasClass("active")) {
             showSearchButton();
         }

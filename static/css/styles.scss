@@ -237,15 +237,14 @@ header {
 
     #modal-btn {
 
-      width: auto;
+      width: 100%;
 
-      
+
       @include transition(opacity 2s ease-in-out,
       font-size 2s,
-      visibility 2.5s
-     );
-     
-      
+      visibility 2s);
+
+
       &.hide {
         font-size: 0;
       }
@@ -254,10 +253,12 @@ header {
       height: $header-height;
       background-color: $modal-btn-background-color;
       color: $modal-btn-font-color;
-      font-family: $subtitle-font;
-      @include responsive-font-size(0.9,
-      0.8,
-      1.2);
+      font-family: $subtitle-font; // Don't use responsive font as it trigger transition 
+      font-size: 0.7rem;
+      @include desktop() {
+        font-size: 1rem;
+      }
+      ;
       .material-icons {
         display: block;
       }
@@ -281,7 +282,7 @@ header {
         color: $dropdown-btn-font-color;
         border-color: $dropdown-btn-background-color;
         font-family: $subtitle-font;
-        @include responsive-font-size(1.3,
+        @include responsive-font-size(1.1,
         0,
         0);
       }
@@ -334,14 +335,13 @@ header {
   top: 50%;
   left: 50%;
   z-index: 100;
-  transform: translate(-50%, -50%); // To account  for cards column 
+  transform: translate(-50%, -50%); // To account for cards col and keep button centred
   @include tablet() {
-    transform: translate(-120%, -50%);
+    left: 40%;
   }
   @include desktop() {
-    transform: translate(-200%, -50%);
+    left: 40%;
   }
-
 
 }
 
@@ -351,7 +351,7 @@ header {
 #search-complete-alert {
   @include alert-positioning();
   @include transition(opacity 1s ease-in-out,
-  visibility 2.5s);
+  visibility 1s);
 }
 
 
@@ -513,5 +513,11 @@ header {
         padding: 1em 0.7em 1em 0.2em;
       }
     }
+  }
+
+  #close-modal-btn {
+    background-color: $activities-background-color;
+    border-color: $activities-background-color;
+    color: $activities-font-color;
   }
 }

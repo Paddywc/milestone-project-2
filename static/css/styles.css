@@ -93,25 +93,22 @@ header {
       header .filter-section .btn-group #accommodation-btn.active {
         color: #FAFDFF; }
     header .filter-section #modal-btn {
-      width: auto;
-      -webkit-transition: opacity 2s ease-in-out, font-size 2s, visibility 2.5s;
-      -moz-transition: opacity 2s ease-in-out, font-size 2s, visibility 2.5s;
-      -ms-transition: opacity 2s ease-in-out, font-size 2s, visibility 2.5s;
-      -o-transition: opacity 2s ease-in-out, font-size 2s, visibility 2.5s;
-      transition: opacity 2s ease-in-out, font-size 2s, visibility 2.5s;
+      width: 100%;
+      -webkit-transition: opacity 2s ease-in-out, font-size 2s, visibility 2s;
+      -moz-transition: opacity 2s ease-in-out, font-size 2s, visibility 2s;
+      -ms-transition: opacity 2s ease-in-out, font-size 2s, visibility 2s;
+      -o-transition: opacity 2s ease-in-out, font-size 2s, visibility 2s;
+      transition: opacity 2s ease-in-out, font-size 2s, visibility 2s;
       height: 10vh;
       background-color: #FFE580;
       color: #A97217;
       font-family: "Maitree", serif;
-      font-size: calc(((0.9vw * 2)/3) + 0.9vmax); }
+      font-size: 0.7rem; }
       header .filter-section #modal-btn.hide {
         font-size: 0; }
-      @media (min-width: 768px) and (max-width: 1024px) {
-        header .filter-section #modal-btn {
-          font-size: calc(((0.8vw * 2)/3) + 0.8vmax); } }
       @media (min-width: 1025px) {
         header .filter-section #modal-btn {
-          font-size: calc(((1.2vw * 2)/3) + 1.2vmax); } }
+          font-size: 1rem; } }
       header .filter-section #modal-btn .material-icons {
         display: block; }
     @media (min-width: 768px) and (max-width: 1024px) {
@@ -126,7 +123,7 @@ header {
       color: #FAECF4;
       border-color: #A7437C;
       font-family: "Maitree", serif;
-      font-size: calc(((1.3vw * 2)/3) + 1.3vmax); }
+      font-size: calc(((1.1vw * 2)/3) + 1.1vmax); }
       @media (min-width: 768px) and (max-width: 1024px) {
         header .filter-section .dropdown-section #filter-dropdown-btn {
           font-size: calc(((0vw * 2)/3) + 0vmax); } }
@@ -173,10 +170,10 @@ header {
   transform: translate(-50%, -50%); }
   @media (min-width: 768px) and (max-width: 1024px) {
     #search-btn {
-      transform: translate(-120%, -50%); } }
+      left: 40%; } }
   @media (min-width: 1025px) {
     #search-btn {
-      transform: translate(-200%, -50%); } }
+      left: 40%; } }
 
 #searching-alert,
 #search-error-alert,
@@ -184,11 +181,11 @@ header {
   width: 100%;
   position: absolute;
   z-index: 110;
-  -webkit-transition: opacity 1s ease-in-out, visibility 2.5s;
-  -moz-transition: opacity 1s ease-in-out, visibility 2.5s;
-  -ms-transition: opacity 1s ease-in-out, visibility 2.5s;
-  -o-transition: opacity 1s ease-in-out, visibility 2.5s;
-  transition: opacity 1s ease-in-out, visibility 2.5s; }
+  -webkit-transition: opacity 1s ease-in-out, visibility 1s;
+  -moz-transition: opacity 1s ease-in-out, visibility 1s;
+  -ms-transition: opacity 1s ease-in-out, visibility 1s;
+  -o-transition: opacity 1s ease-in-out, visibility 1s;
+  transition: opacity 1s ease-in-out, visibility 1s; }
 
 .hide {
   opacity: 0;
@@ -330,5 +327,9 @@ header {
     @media (min-width: 1025px) {
       .how-it-works-section .instructions-list li {
         padding: 1em 0.7em 1em 0.2em; } }
+.how-it-works-section #close-modal-btn {
+  background-color: #f78888;
+  border-color: #f78888;
+  color: #FFD6D6; }
 
 /*# sourceMappingURL=styles.css.map */
