@@ -2,10 +2,12 @@
 let destinationExplorerData = {
     map: "",
     currentYelpData: [],
-    markerCluster: { markers_: [], clusters_: [] },
+    markerCluster: {
+        markers_: [],
+        clusters_: []
+    },
     numberOfCallsRunning: 0
 };
-
 
 function userIsOnMobile() {
     // 768px width is Bootstrap MD- the screen width where cards appear on the page
@@ -13,12 +15,10 @@ function userIsOnMobile() {
 
     if (windowWidth < 768) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 function getMapCenter(map) {
 
@@ -41,45 +41,43 @@ function clearDataIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInK
     if (metersMoved > (distanceInKilometers * 1000)) {
         let interval = setInterval(removeCardsWhenSearchComplete, 200);
 
-        function removeCardsWhenSearchComplete() {
+        var removeCardsWhenSearchComplete = function () {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
                 $(".card-group").empty();
                 showOrHideModalButton();
                 destinationExplorerData.currentYelpData = [];
                 clearInterval(interval);
             }
-        }
+        };
     }
 }
 
-
-
-// Adds functionality to Google Maps Searcj
+// Adds functionality to Google Maps Search
 // Code from Google API documentation: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox.
 // Added code to return old and new center and use them in clearDataIfMovedOverSpecifiedDistance
 function createSearchbox(map) {
     let input = document.getElementById('pac-input');
-    let searchBox = new google.maps.places.SearchBox(input)
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input)
+    let searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
     // Bias the SearchBox results towards current map's viewport.
-    map.addListener('bounds_changed', function() {
+    map.addListener('bounds_changed', function () {
         searchBox.setBounds(map.getBounds());
     });
     let markers = [];
     // Listen for the event fired when the user selects a prediction and retrieve
     // more details for that place.
-    searchBox.addListener('places_changed', function() {
+    searchBox.addListener('places_changed', function () {
         let oldMapCenter = getMapCenter(map);
 
         let places = searchBox.getPlaces();
 
         // Clear out the old markers.
-        markers.forEach(function(marker) {
+        markers.forEach(function (marker) {
             marker.setMap(null);
         });
         markers = [];
-        let bounds = new google.maps.LatLngBounds()
-        places.forEach(function(place) {
+        let bounds = new google.maps.LatLngBounds();
+        places.forEach(function (place) {
             if (!place.geometry) {
                 console.log('Returned place contains no geometry');
                 return;
@@ -99,8 +97,7 @@ function createSearchbox(map) {
             }));
             if (place.geometry.viewport) {
                 bounds.union(place.geometry.viewport);
-            }
-            else {
+            } else {
                 bounds.extend(place.geometry.location);
             }
         });
@@ -108,44 +105,37 @@ function createSearchbox(map) {
         let newMapCenter = getMapCenter(map);
         clearDataIfMovedOverSpecifiedDistance(oldMapCenter, newMapCenter, 20);
 
-
     });
 }
-
 
 function toggleButtonActiveClass(button) {
     $(button).toggleClass("disabled");
     $(button).toggleClass("active");
 }
 
-// To avoid loop where clicking fitler checkbox triggers filter button click and vice versa
+// To avoid loop where clicking filter checkbox triggers filter button click and vice versa
 function checkIfFiltersSynchronized(button, checkbox) {
 
     if (($(button).hasClass("active") && $(checkbox).is(":checked")) || ($(button).hasClass("disabled") && !$(checkbox).is(":checked"))) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
-
-function synchronizeButtonsAndCheckboxs(itemClicked) {
-
+function synchronizeButtonsAndCheckboxes(itemClicked) {
 
     let filtersAlreadySynchronized, filterCategory;
 
     if ($(itemClicked).hasClass("activities-filter")) {
-        filterCategory = "activities"
-        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#activities-btn"), $("#activities-checkbox"))
-    }
-    else if ($(itemClicked).hasClass("food-drink-filter")) {
-        filterCategory = "foodAndDrink"
-        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#food-drink-btn"), $("#food-drink-checkbox"))
-    }
-    else {
+        filterCategory = "activities";
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#activities-btn"), $("#activities-checkbox"));
+    } else if ($(itemClicked).hasClass("food-drink-filter")) {
+        filterCategory = "foodAndDrink";
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#food-drink-btn"), $("#food-drink-checkbox"));
+    } else {
         filterCategory = "accommodation";
-        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#accommodation-btn"), $("#accommodation-checkbox"))
+        filtersAlreadySynchronized = checkIfFiltersSynchronized($("#accommodation-btn"), $("#accommodation-checkbox"));
     }
 
     if (!filtersAlreadySynchronized) {
@@ -154,35 +144,28 @@ function synchronizeButtonsAndCheckboxs(itemClicked) {
 
             if (filterCategory === "activities") {
                 $("#activities-btn").click();
-            }
-            else if (filterCategory === "foodAndDrink") {
+            } else if (filterCategory === "foodAndDrink") {
                 $("#food-drink-btn").click();
-            }
-            else {
+            } else {
                 $("#accommodation-btn").click();
             }
 
-        }
-        else {
+        } else {
             if (filterCategory === "activities") {
                 $("#activities-checkbox").click();
-            }
-            else if (filterCategory === "foodAndDrink") {
+            } else if (filterCategory === "foodAndDrink") {
                 $("#food-drink-checkbox").click();
-            }
-            else {
+            } else {
                 $("#accommodation-checkbox").click();
             }
         }
     }
 }
 
+$(".filter-checkbox").click(function () {
 
-$(".filter-checkbox").click(function() {
-
-    synchronizeButtonsAndCheckboxs(this);
+    synchronizeButtonsAndCheckboxes(this);
 });
-
 
 function getSearchString() {
     // Filters terms used in Yelp Get request 
@@ -195,23 +178,21 @@ function getSearchString() {
 
     if ($("#activities-btn").hasClass("active")) {
         searchString += activities;
-    };
+    }
     if ($("#food-drink-btn").hasClass("active")) {
         searchString += foodAndDrink;
-    };
+    }
     if ($("#accommodation-btn").hasClass("active")) {
         searchString += accommodation;
-    };
+    }
 
     return searchString;
 }
-
 
 function displaySearchingToUser() {
     destinationExplorerData.numberOfCallsRunning++;
     $("#searching-alert").removeClass("hide");
 }
-
 
 function displaySearchErrorToUser(errorMessage) {
     $("#searching-alert").addClass("hide");
@@ -221,30 +202,27 @@ function displaySearchErrorToUser(errorMessage) {
 function displaySearchCompletedToUser() {
     destinationExplorerData.numberOfCallsRunning--;
     if (destinationExplorerData.numberOfCallsRunning === 0) {
-        $("#searching-alert").addClass("hide")
-        $("#search-complete-alert").removeClass("hide")
-        setTimeout(function() {
+        $("#searching-alert").addClass("hide");
+        $("#search-complete-alert").removeClass("hide");
+        setTimeout(function () {
             $("#search-complete-alert").addClass("hide");
         }, 3000);
     }
 }
 
-
 function getYelpData(latitude, longitude, searchQuery) {
-
 
     displaySearchingToUser();
 
-
     function handleError(xhr, status, error) {
-        let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error. '
+        let errorMessage = 'Error! Failed to retrieve data. ' + xhr.status + ' error. ';
         displaySearchErrorToUser(errorMessage);
         console.log(errorMessage);
     }
 
     // Enables cors anywhere
     // Code from: https://github.com/Rob--W/cors-anywhere
-    jQuery.ajaxPrefilter(function(options) {
+    jQuery.ajaxPrefilter(function (options) {
         if (options.crossDomain && jQuery.support.cors) {
             options.url = 'https://cors-anywhere.herokuapp.com/' + options.url;
         }
@@ -253,7 +231,7 @@ function getYelpData(latitude, longitude, searchQuery) {
     return $.ajax({
         type: "GET",
         url: `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}&radius=4000&categories=${searchQuery}`,
-        success: function(response) {
+        success: function (response) {
             displaySearchCompletedToUser();
             return response;
         },
@@ -269,7 +247,7 @@ function getYelpData(latitude, longitude, searchQuery) {
 }
 
 // Initial center of map is Dublin city center
-let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
+let generateNewMap = function (latitude = 53.3498053, longitude = -6.2603097) {
 
     //   Code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
     let map = new google.maps.Map(document.getElementById('map'), {
@@ -284,35 +262,27 @@ let generateNewMap = function(latitude = 53.3498053, longitude = -6.2603097) {
     return map;
 };
 
-
-
-
 function ifUndefinedReturnNA(valueToCheck) {
     if (valueToCheck == null) {
         return 'N/A';
-    }
-    else {
+    } else {
         return valueToCheck;
     }
 }
 
-
 function checkIfBusinessIsDuplicate(yelpBusiness, yelpData) {
     let existingBusinessIds = [];
 
-    yelpData.forEach(function(business) {
+    yelpData.forEach(function (business) {
         existingBusinessIds.push(business.yelpId);
     });
 
-
     if (existingBusinessIds.includes(yelpBusiness.id)) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 function getBusinessCategories(yelpBusiness) {
     let businessCategories = yelpBusiness.categories;
@@ -346,22 +316,17 @@ function getYelpCategoriesForBusinessType(businessType) {
 
     let activities = ["Active Life", "Street Art", "Race Tracks", "Professional Sports Teams", "Performing Arts", "Opera & Ballet", "Museums", "Art Museums", "Children's Museums", "Trade Fairs", "General Festivals", "Fun Fair", "Christmas Markets", "Festivals", "Cultural Center", "Country Clubs", "Castles", "Cabaret", "Botanical Gardens", "Art Galleries", "Tours", "Aerial Tours", "Architectural Tours", "Art Tours", "Beer Tours", "Bike tours", "Boat Tours", "Bus Tours", "Food Tours", "Historical Tours", "Scooter Tours", "Walking Tours", "Whale Watching Tours", "Wine Tours", "Active Life", "ATV Rentals/Tours", "Airsoft", "Amateur Sports Teams", "Amusement Parks", "Aquariums", "Archery", "Axe Throwing", "Badminton", "Baseball Fields", "Basketball Courts", "Bathing Area", "Batting Cages", "Beach Equipment Rentals", "Beach Volleyball", "Beaches", "Bicycle Paths", "Bike Parking", "Bike Rentals", "Boating", "Bobsledding", "Bocce Ball", "Bowling", "Bubble Soccer", "Bungee Jumping", "Carousels", "Challenge Courses", "Climbing", "Cycling Classes", "Day Camps", "Disc Golf", "Diving", "Free Diving", "Scuba Diving", "Escape Games", "Experiences", "Fencing Clubs", "Fishing", "Fitness & Instruction", "Aerial Fitness", "Barre Classes", "Boot Camps", "Boxing", "Cardio Classes", "Dance Studios", "EMS Training", "Golf Lessons", "Gyms", "Circuit Training Gyms", "Interval Training Gyms", "Martial Arts", "Brazilian Jiu-jitsu", "Chinese Martial Arts", "Karate", "Kickboxing", "Muay Thai", "Taekwondo", "Meditation Centers", "Pilates", "Qi Gong", "Self-defense Classes", "Swimming Lessons/Schools", "Tai Chi", "Trainers", "Yoga", "Flyboarding", "Gliding", "Go Karts", "Golf", "Gun/Rifle Ranges", "Gymnastics", "Handball", "Hang Gliding", "Hiking", "Horse Racing", "Horseback Riding", "Hot Air Balloons", "Indoor Playcentre", "Jet Skis", "Kids Activities", "Kiteboarding", "Lakes", "Laser Tag", "Lawn Bowling", "Mini Golf", "Mountain Biking", "Nudist", "Paddleboarding", "Paintball", "Parasailing", "Parks", "Dog Parks", "Skate Parks", "Playgrounds", "Public Plazas", "Races & Competitions", "Racing Experience", "Rafting/Kayaking", "Recreation Centers", "Rock Climbing", "Sailing", "Scavenger Hunts", "Scooter Rentals", "Senior Centers", "Skating Rinks", "Skiing", "Skydiving", "Sledding", "Snorkeling", "Soccer", "Sport Equipment Hire", "Sports Clubs", "Squash", "Summer Camps", "Surf Lifesaving", "Surfing", "Swimming Pools", "Tennis", "Trampoline Parks", "Tubing", "Volleyball", "Water Parks", "Wildlife Hunting Ranges", "Ziplining", "Zoos", "Petting Zoos", "Zorbing"];
 
-
     if (businessType === "foodAndDrink") {
         return foodAndDrink;
-    }
-    else if (businessType === "accommodation") {
+    } else if (businessType === "accommodation") {
         return accommodation;
-    }
-    else {
+    } else {
         return activities;
     }
 
 }
 
 function determineBusinessTypes(businessCategories) {
-
-
 
     let foodAndDrink = getYelpCategoriesForBusinessType("foodAndDrink");
     let accommodation = getYelpCategoriesForBusinessType("accommodation");
@@ -390,8 +355,7 @@ function determineBusinessTypes(businessCategories) {
 
     let categoriesArray = [];
 
-
-    // If multiple categories prioritize 1: accommodation, 2:activities 3: foodanddrink
+    // If multiple categories prioritize 1: accommodation, 2:activities 3: foodAndDrink
 
     if (foundAccommodation && accommodationActive) {
         categoriesArray.push("accommodation");
@@ -412,31 +376,23 @@ function determineBusinessTypes(businessCategories) {
         categoriesArray.push("foodAndDrink");
     }
 
-
-
     return categoriesArray;
 }
 
-
-
-
 function determineIconToUse(yelpBusiness) {
 
-
     // Icons to appear as markers on map
-    let foodIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC'
-    let activitiesIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII='
-    let accommodationIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg=='
+    let foodIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC';
+    let activitiesIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII=';
+    let accommodationIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg==';
 
     let businessType = determineBusinessTypes(getBusinessCategories(yelpBusiness))[0];
 
     if (businessType === "foodAndDrink") {
         return foodIcon;
-    }
-    else if (businessType === "accommodation") {
+    } else if (businessType === "accommodation") {
         return accommodationIcon;
-    }
-    else {
+    } else {
         return activitiesIcon;
     }
 
@@ -444,7 +400,7 @@ function determineIconToUse(yelpBusiness) {
 
 function createInfoWindowContent(marker, yelpData) {
     let fullBusinessData;
-    yelpData.forEach(function(business) {
+    yelpData.forEach(function (business) {
         if (business.marker === marker) {
             fullBusinessData = business;
         }
@@ -484,26 +440,23 @@ function createAndViewMarkerInfoWindow(marker) {
 
 }
 
-
 function viewMarkerCard(businessId) {
     if (!$(`#${businessId}`).hasClass("highlight")) {
         $(".aside-card").removeClass("highlight");
         $(`#${businessId}`).addClass("highlight");
-        
-        let navbarHeight =  (window.innerHeight/10);
-        
+
+        let navbarHeight = (window.innerHeight / 10);
+
         $("#cards-col").animate({
             scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top) - navbarHeight)
         }, 2000);
     }
 }
 
-
 function viewInfoWindowOrCard(marker, businessId) {
     if (userIsOnMobile()) {
         createAndViewMarkerInfoWindow(marker);
-    }
-    else {
+    } else {
         viewMarkerCard(businessId);
     }
 }
@@ -514,7 +467,7 @@ function viewInfoWindowOrCard(marker, businessId) {
 function retrieveRequiredYelpData(yelpData) {
     let businesses = yelpData.businesses;
     let requiredYelpData = [];
-    businesses.forEach(function(business) {
+    businesses.forEach(function (business) {
 
         if (!checkIfBusinessIsDuplicate(business, destinationExplorerData.currentYelpData)) {
             let businessObject = {
@@ -534,7 +487,7 @@ function retrieveRequiredYelpData(yelpData) {
                     icon: determineIconToUse(business)
                 })
             };
-            businessObject.marker.addListener("click", function() {
+            businessObject.marker.addListener("click", function () {
                 viewInfoWindowOrCard(businessObject.marker, businessObject.yelpId);
             });
             requiredYelpData.push(businessObject);
@@ -545,10 +498,6 @@ function retrieveRequiredYelpData(yelpData) {
     let currentAndNewData = currentData.concat(requiredYelpData);
     return currentAndNewData;
 }
-
-
-
-
 
 function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
 
@@ -572,41 +521,33 @@ function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
     return markerCluster;
 }
 
-
-
 function determineBusinessTypesToRemove(buttonPressed) {
     let typeToRemove = "";
 
     if ($(buttonPressed).is("#food-drink-btn")) {
         typeToRemove = "foodAndDrink";
-    }
-    else if ($(buttonPressed).is("#accommodation-btn")) {
+    } else if ($(buttonPressed).is("#accommodation-btn")) {
         typeToRemove = "accommodation";
-    }
-    else {
+    } else {
         typeToRemove = "activities";
     }
     return typeToRemove;
 }
 
-function updateCardClass(business, originalBusinessType, newBusinessType){
+function updateCardClass(business, originalBusinessType, newBusinessType) {
     $(`#${business.yelpId}`).removeClass(originalBusinessType).addClass(newBusinessType);
 }
 
 function checkIfOtherValidCategories(business) {
 
-
     function checkIfButtonActive(businessType) {
         if (businessType === "accommodation") {
-            return $("#accommodation-btn").hasClass("active")
-        }
-        else if (businessType === "foodAndDrink") {
-            return $("#food-drink-btn").hasClass("active")
-        }
-        else if (businessType === "activities") {
-            return $("#activities-btn").hasClass("active")
-        }
-        else {
+            return $("#accommodation-btn").hasClass("active");
+        } else if (businessType === "foodAndDrink") {
+            return $("#food-drink-btn").hasClass("active");
+        } else if (businessType === "activities") {
+            return $("#activities-btn").hasClass("active");
+        } else {
             return false;
         }
     }
@@ -625,8 +566,7 @@ function checkIfOtherValidCategories(business) {
             }
         }
         return false;
-    }
-    else {
+    } else {
         return false;
     }
 
@@ -646,32 +586,28 @@ function removeYelpData(yelpData, typeToRemove) {
     return yelpData;
 }
 
-
 function showSearchButton() {
-    $("#search-btn").removeClass("hide")
+    $("#search-btn").removeClass("hide");
 }
 
 function hideSearchButton() {
-    $("#search-btn").addClass("hide")
+    $("#search-btn").addClass("hide");
 }
 
-
-let showOrHideModalButton = function() {
+let showOrHideModalButton = function () {
     if (!userIsOnMobile() && $(".aside-card").length === 0) {
         $("#modal-btn").addClass("hide");
-    }
-    else {
+    } else {
         $("#modal-btn").removeClass("hide");
     }
 };
-
 
 $(window).resize(showOrHideModalButton);
 
 function viewOnMap(businessId) {
 
     let businessMarker;
-    destinationExplorerData.currentYelpData.forEach(function(business) {
+    destinationExplorerData.currentYelpData.forEach(function (business) {
         if (business.yelpId === businessId) {
             businessMarker = business.marker;
         }
@@ -680,27 +616,24 @@ function viewOnMap(businessId) {
     destinationExplorerData.map.setCenter(businessMarker.position);
     destinationExplorerData.map.setZoom(17);
     businessMarker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(function() {
+    setTimeout(function () {
         businessMarker.setAnimation(null);
     }, 3000);
 }
 
-
 function checkIfCardAlreadyExists(business) {
     if ($(`#${business.yelpId}`).length > 0) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 function createNewCardsContent(yelpData) {
     let cardsContentString = "";
     if (yelpData.length > 0) {
 
-        yelpData.forEach(function(business) {
+        yelpData.forEach(function (business) {
             if (!checkIfCardAlreadyExists(business)) {
                 let card = `
       <div class="card aside-card ${business.businessTypes[0]}" id="${business.yelpId}">
@@ -730,20 +663,17 @@ function createNewCardsContent(yelpData) {
     return cardsContentString;
 }
 
-
 function addToCards(yelpData) {
     let newContent = createNewCardsContent(yelpData);
     $('#cards-content .card-group').append(newContent);
 }
-
-
 
 function addDataAndUpdatePage() {
     let searchString = getSearchString();
     // If at least one filter button is active
     if (searchString != "") {
         let mapCenter = getMapCenter(destinationExplorerData.map);
-        getYelpData(mapCenter.lat, mapCenter.lng, searchString).then(function(yelpResponse) {
+        getYelpData(mapCenter.lat, mapCenter.lng, searchString).then(function (yelpResponse) {
             destinationExplorerData.currentYelpData = retrieveRequiredYelpData(yelpResponse);
             destinationExplorerData.markerCluster = addMarkersToMap(destinationExplorerData.currentYelpData, destinationExplorerData.markerCluster, destinationExplorerData.map);
             addToCards(destinationExplorerData.currentYelpData);
@@ -752,20 +682,16 @@ function addDataAndUpdatePage() {
     }
 }
 
-
 function getRemovedData(newYelpData, oldYelpData) {
     let removedData = [];
-    oldYelpData.forEach(function(business) {
+    oldYelpData.forEach(function (business) {
         if (!newYelpData.includes(business)) {
             removedData.push(business);
         }
     });
 
-
-
     return removedData;
 }
-
 
 function extractRemovedIds(removedData) {
     let removedIds = [];
@@ -779,15 +705,13 @@ function removeCards(removedData) {
 
     let removedIds = extractRemovedIds(removedData);
 
-    $(".aside-card").each(function() {
+    $(".aside-card").each(function () {
         if (removedIds.includes(this.id)) {
             this.remove();
         }
     });
 
 }
-
-
 
 function removeDataAndUpdatePage(typeToRemove) {
     let oldYelpData = [];
@@ -801,42 +725,37 @@ function removeDataAndUpdatePage(typeToRemove) {
     showOrHideModalButton();
 }
 
-
-
-$(".filter-btn").click(function() {
+$(".filter-btn").click(function () {
     hideSearchButton();
     toggleButtonActiveClass($(this));
-    synchronizeButtonsAndCheckboxs(this);
+    synchronizeButtonsAndCheckboxes(this);
     if ($(this).hasClass("active")) {
         addDataAndUpdatePage();
 
-    }
-    else {
+    } else {
         let typeToRemove = determineBusinessTypesToRemove($(this));
 
         let interval = setInterval(removeDataWhenAllSearchesComplete, 200, typeToRemove);
         // For dealing with when the user deselects a search filter while the API call is in progress
-        function removeDataWhenAllSearchesComplete(typeToRemove) {
+        var removeDataWhenAllSearchesComplete = function (typeToRemove) {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
                 removeDataAndUpdatePage(typeToRemove);
                 clearInterval(interval);
             }
-        }
+        };
     }
 });
 
-
-$("#search-btn").click(function() {
+$("#search-btn").click(function () {
     hideSearchButton();
     addDataAndUpdatePage();
 });
-
 
 function initMapDestinationExplorer() {
     showOrHideModalButton();
     destinationExplorerData.map = generateNewMap();
     createSearchbox(destinationExplorerData.map);
-    destinationExplorerData.map.addListener('idle', function() {
+    destinationExplorerData.map.addListener('idle', function () {
         if ($(".filter-btn").hasClass("active")) {
             showSearchButton();
         }

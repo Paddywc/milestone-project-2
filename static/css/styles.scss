@@ -1,41 +1,29 @@
 @import url('https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700|Maitree|Overlock');
-
 $tablet-width: 768px;
 $desktop-width: 1025px;
-
 $header-height: 10vh;
 $body-height: 90vh;
-
 $header-background-color: #929191;
-
 $title-font: 'EB Garamond',
 serif;
 $title-font-color: #F1EFEF;
-
 $subtitle-font: 'Maitree',
 serif;
-
 $core-font: 'Overlock',
 cursive;
-
 $activities-background-color:#f78888;
 $activities-font-color:#FFD6D6;
 $activities-title-color: #FFEF50;
-
 $food-drink-background-color: #f3d250;
 $food-drink-font-color: #FFF9E3;
 $food-drink-title-color: #291A7A;
-
 $accommodation-background-color:#90ccf4;
 $accommodation-font-color:#FAFDFF;
 $accommodation-title-color: #FF8E00;
-
 $modal-btn-background-color: #FFE580;
 $modal-btn-font-color:#A97217;
-
 $dropdown-btn-background-color: #A7437C;
 $dropdown-btn-font-color: #FAECF4;
-
 $cards-col-background-color: #fbe8a6;
 $cards-col-how-it-works-font-color: #656464;
 
@@ -51,14 +39,15 @@ $cards-col-how-it-works-font-color: #656464;
   }
 }
 
-
 @mixin responsive-font-size($mobile-font,
 $tablet-font,
 $desktop-font) {
-  font-size:  calc(((#{$mobile-font}vw * 2)/3) + #{$mobile-font}vmax);
+  font-size: calc(((#{$mobile-font}vw * 2)/3) + #{$mobile-font}vmax);
+
   @include tablet() {
     font-size: calc(((#{$tablet-font}vw * 2)/3) + #{$tablet-font}vmax);
   }
+
   @include desktop() {
     font-size: calc(((#{$desktop-font}vw * 2)/3) + #{$desktop-font}vmax);
   }
@@ -86,6 +75,7 @@ $desktop-font) {
 @mixin activities-card-colors {
   background-color: $activities-background-color;
   color: $activities-font-color;
+
   .card-title {
     color: $activities-title-color;
   }
@@ -94,6 +84,7 @@ $desktop-font) {
 @mixin accommodation-card-colors {
   background-color: $accommodation-background-color;
   color: $accommodation-font-color;
+
   .card-title {
     color: $accommodation-title-color;
   }
@@ -102,11 +93,11 @@ $desktop-font) {
 @mixin food-drink-card-colors {
   background-color: $food-drink-background-color;
   color: $food-drink-font-color;
+
   .card-title {
     color: $food-drink-title-color;
   }
 }
-
 
 // Code from: https://stackoverflow.com/questions/40550070/multiple-transitions-with-scss
 @mixin transition($x...) {
@@ -117,12 +108,8 @@ $desktop-font) {
   transition: $x;
 }
 
-
-
-
 header {
   height: $header-height;
-
 
   .container-fluid,
   .list-inline,
@@ -130,11 +117,11 @@ header {
     height: 100%;
   }
 
-
-
   background-color: #929191;
+
   .title-section {
     margin-left: 1%;
+
     #header-title {
       font-family: $title-font;
       color: $title-font-color;
@@ -146,6 +133,7 @@ header {
 
   .filter-section {
     margin-left: auto;
+
     #buttons-prefix {
       transform: translateY(12%);
       font-family: $title-font;
@@ -154,62 +142,76 @@ header {
       @include responsive-font-size(0,
       1.1,
       1.2);
+
       @include tablet() {
         display: block;
       }
+
       @include desktop() {
         display: block;
       }
     }
+
     .btn-group {
       display: none;
+
       @include tablet() {
         display: inline-flex;
       }
+
       @include desktop() {
         display: inline-flex;
       }
+
       .btn {
         height: $header-height;
         font-family: $subtitle-font;
         @include responsive-font-size(0.8,
         0.7,
         1);
-        border-radius: 0.25rem!important; //Overrides removal of certain borders in Bootstrap .btn-group
+        border-radius: 0.25rem !important; //Overrides removal of certain borders in Bootstrap .btn-group
         margin-right: 1em;
+
         &:hover {
           cursor: pointer;
         }
       }
-      #activities-btn {
 
+      #activities-btn {
         &:before {
           // Icon used on map, except resized (24px) and matching font color
           content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD0SURBVEhL7ZOxDcIwEEVT0rIADdBQswULUNPS0cAASFCxDiUbUCS2IyGkrECRlph/l09DECLYBUWe9KXLv/jubMtJRzQqa8eVc1eVMSPa8UDhlXfOiySmHQ/u4KLKsiHtODwnfxXT4Xhr95i8hM5UKR7TcUDBG47pIJKYdjxQ+I7JtyrEtOPgi6LHc99QXjymw/Fp2peimH4p0gbwmA7HGzPQBtYuRNoAHtPh4OVOuIO5SGN4TIdT5fmUDWYijeEx/TsoVF/oB+HIdvy9PShQN8CjeqtYDfjZ4L8b4DLX0FGL1HFDbHCSmMu+Rxa3EZd1tCVJHlRQfnGeBjQuAAAAAElFTkSuQmCC");
           @include align-filter-icon();
         }
+
         &.disabled {
           background-color: $activities-background-color;
           color: $activities-font-color;
           border-color: $activities-background-color;
-        } // Overriding Bootstrap default color 
+        }
+
+        // Overriding Bootstrap default color 
         &.active {
           color: $activities-font-color;
         }
-
       }
+
       #food-drink-btn {
         color: #fff;
+
         &:before {
           // Icon used on map, except resized (24px) and matching font color
           content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHHSURBVEhL7ZU7S8NQFMerICIoSHXTQf0AgoODIijiIHUTHKR+ACcHBx+Lqw6Cm7p1dOm3UAShW4dKQWrvTfFR15KHeo//mx5DY5rWiHWQ/OCQe57/m9skTcR0BFWTo8qSu1HM1+eIede3RTos54Oc8hzZkqJYYx+EDrUPgcuwnA8vackLMo2lVoaa/O8JNkt+odXQWNDj/wsqx5j9vqC4xmDHXTtiut4nj13fFlnkq+7aFMtuzpL72vehzPtxFsxyqClE1I2BzxC4075S1QH472TJnM4RPfWrmhhxc7Y4YcGU9gOg4BbNNf2F4FAAso01HnLKIX2MGY5l9MaVMoaUVd7GrFfMLBDlerjUD5JpbrxRSiQ57KFsY0ofl94UmeUJDuMuRRKxK93baDiFCmySy5qDxjMufsD6AOIrsFWsz3G1cX3Dxta53EOpYi96NmCPbr8ldogqw5wOB79DFwZvoeGlcbf1TYiCMuUilzYFvd5TGgkcUx+aUyxUxFM8ozfD6VB+LPiJK4gh7LYlFmxLxwXJLI35/nDrgnlfjEqDXB4guqAl93RDS8NHmcsD/OAO5QLZ4qil4RS4PABen01dw27MX5BIfAA0cLqEt84w7gAAAABJRU5ErkJggg==");
           @include align-filter-icon();
         }
+
         &.disabled {
           background-color: $food-drink-background-color;
           color: $food-drink-font-color;
           border-color: $food-drink-background-color;
-        } // Overriding Bootstrap default color 
+        }
+
+        // Overriding Bootstrap default color 
         &.active {
           color: $food-drink-font-color;
         }
@@ -226,52 +228,47 @@ header {
           background-color: $accommodation-background-color;
           color: $accommodation-font-color;
           border-color: $accommodation-background-color;
-        } // Overriding Bootstrap default color 
+        }
+
+        // Overriding Bootstrap default color 
         &.active {
           color: $accommodation-font-color;
         }
       }
-
     }
 
-
     #modal-btn {
-
       width: 100%;
-
-
       @include transition(opacity 2s ease-in-out,
       font-size 2s,
       visibility 2s);
 
-
       &.hide {
         font-size: 0;
       }
-
 
       height: $header-height;
       background-color: $modal-btn-background-color;
       color: $modal-btn-font-color;
       font-family: $subtitle-font; // Don't use responsive font as it trigger transition 
       font-size: 0.7rem;
+
       @include desktop() {
         font-size: 1rem;
       }
+
       ;
+
       .material-icons {
         display: block;
       }
-
-
     }
-
-
 
     .dropdown-section {
       @include tablet() {
         display: none;
       }
+
       @include desktop() {
         display: none;
       }
@@ -293,12 +290,14 @@ header {
           @include align-filter-icon();
         }
       }
+
       #food-drink-checkbox-label {
         &:before {
           content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC");
           @include align-filter-icon();
         }
       }
+
       #accommodation-checkbox-label {
         &:before {
           content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD4SURBVFhH7ZJBEoIwDEW5hCeChWek42l0pY6LlvsokVThpzTApLu+mYxN+/pTZmwqlRzny+vUOX+nojVvr0JO24cH1RY/yzfMBd+58KaidS6UzsaHDtGn9eFHLIdT6BQ8fllIhS6H/3363f0IHE79fAA+Yn6W8uMe63lIxOF8tHtQ7iwJCWvDIxiqDUA/5fygf+4WcRm6zx8/8MnbkhiYfSUzhR7zeUuiCoC5bx4IqD4KpXuBdsG6F6gCYO6bBwKqj0LpXqBdsO4FqgCY++aBgOqjULoXaBese4EqAOa+eSCg+lEoXTxO0vb+lrpgWa3zVx5XqTBN8wF05P4FG/6txAAAAABJRU5ErkJggg==");
@@ -309,13 +308,14 @@ header {
   }
 }
 
-
 #map {
   width: 100vw;
   height: $body-height;
+
   @include tablet() {
     width: 75vw;
   }
+
   @include desktop() {
     width: 75vw;
   }
@@ -326,7 +326,6 @@ header {
   padding-right: 0;
 }
 
-
 // Code for center-aligning element from: https://stackoverflow.com/questions/7720730/how-to-align-the-absolute-position-to-center
 #search-btn {
   @include transition(opacity 2s ease-in-out,
@@ -336,15 +335,15 @@ header {
   left: 50%;
   z-index: 100;
   transform: translate(-50%, -50%); // To account for cards col and keep button centred
+
   @include tablet() {
     left: 40%;
   }
+
   @include desktop() {
     left: 40%;
   }
-
 }
-
 
 #searching-alert,
 #search-error-alert,
@@ -354,15 +353,10 @@ header {
   visibility 1s);
 }
 
-
 .hide {
-
   opacity: 0; // display: none !important;
   visibility: hidden;
 }
-
-
-
 
 #cards-col {
   padding: 0;
@@ -376,10 +370,10 @@ header {
     z-index: -10;
     color: $cards-col-how-it-works-font-color;
   }
+
   .aside-card {
     flex: none;
     width: 100%;
-
 
     .card-title {
       font-family: $title-font;
@@ -389,24 +383,28 @@ header {
     .card-subtitle {
       font-family: $subtitle-font;
     }
+
     .card-text {
       font-family: $core-font;
     }
+
     .card-link {
       font-family: $core-font;
       font-weight: 600;
     }
 
-
     &.activities {
       @include activities-card-colors();
     }
+
     &.accommodation {
       @include accommodation-card-colors();
     }
+
     &.foodAndDrink {
       @include food-drink-card-colors();
     }
+
     &.highlight {
       filter: saturate(3);
 
@@ -418,7 +416,6 @@ header {
           vertical-align: bottom;
         }
       }
-
     }
   }
 
@@ -426,11 +423,7 @@ header {
     max-height: 15em;
     object-fit: cover;
   }
-
-
 }
-
-
 
 .infowindow-card {
   max-width: 50vw;
@@ -442,6 +435,7 @@ header {
   @include tablet() {
     max-width: 30vw;
   }
+
   @include desktop() {
     max-width: 25vw;
   }
@@ -452,6 +446,7 @@ header {
     @include tablet() {
       max-height: 20em;
     }
+
     @include desktop() {
       max-hight: 35em;
     }
@@ -473,16 +468,9 @@ header {
     0.8);
     font-family: $subtitle-font;
   }
-
-
-
 }
 
 .how-it-works-section {
-
-
-
-
   #how-it-works-cards-title {
     padding-left: 2%;
     @include responsive-font-size(0,
@@ -492,7 +480,6 @@ header {
   }
 
   #how-it-works-modal-title {
-
     @include how-it-works-title();
   }
 
@@ -505,6 +492,7 @@ header {
 
     li {
       padding: 0.2em;
+
       @include tablet() {
         padding: 0.8em 0.7em 0.8em 0.2em;
       }

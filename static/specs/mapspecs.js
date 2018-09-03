@@ -191,22 +191,21 @@ function returnSampleYelpApiResponse() {
     };
 }
 
-
 describe('toggleButtonActiveClass function', function() {
-    
+
     beforeEach(function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
-    })
+    });
     afterEach(function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
-    })
+    });
 
     it("should exist", function() {
         expect(toggleButtonActiveClass).toBeDefined();
     });
 
     it("should add the active class and remove the disabled class when clicking on a disabled button", function() {
-        $("#activities-btn").click()
+        $("#activities-btn").click();
         let hasActiveClass = $("#activities-btn").hasClass("active");
         let hasDisabledClass = $("#activities-btn").hasClass("disabled");
         expect(hasActiveClass).toBe(true);
@@ -217,20 +216,18 @@ describe('toggleButtonActiveClass function', function() {
 
 describe('getSearchString function', function() {
 
-
-
     afterEach(function() {
         $(".filter-btn").removeClass("active").addClass("disabled");
-    })
+    });
 
     it("should exist", function() {
         expect(getSearchString).toBeDefined();
     });
 
     it("should return a string", function() {
-        searchString = getSearchString()
-        expect(typeof searchString).toBe("string")
-    })
+        searchString = getSearchString();
+        expect(typeof searchString).toBe("string");
+    });
 
     it("should add search queries to returned string on button click", function() {
         $("#food-drink-btn").click();
@@ -243,15 +240,13 @@ describe('getSearchString function', function() {
         expect(secondSearchString).toBe('guesthouses,campgrounds,hostels,hotels');
 
         $("#food-drink-btn").click();
-        let thirdSearchString = getSearchString()
+        let thirdSearchString = getSearchString();
         expect(thirdSearchString).toBe(firstSearchString + secondSearchString);
     });
 
 });
 
 describe('getYelpData function', function() {
-
-
 
     beforeEach(function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -267,7 +262,6 @@ describe('getYelpData function', function() {
         }, 5000);
     });
 
-
     var results;
     getYelpData(53.3498053, -6.260309, "food,bars").then(function(returnData) {
         results = returnData;
@@ -281,25 +275,20 @@ describe('getYelpData function', function() {
         expect(results.businesses).toBeTruthy();
     });
 
-
     it("Should return and object", function() {
-        expect(typeof results).toBe("object")
+        expect(typeof results).toBe("object");
 
     });
-
 
 });
 
 describe("retrieveRequiredYelpData function", function() {
 
-
     it("should exist", function() {
         expect(retrieveRequiredYelpData).toBeDefined();
-    })
+    });
     let sampleYelpApiresponse = returnSampleYelpApiResponse();
     let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
-
-
 
     it("should return variables of the expected type", function() {
         expect(typeof yelpData[0]).toBe("object");
@@ -309,20 +298,13 @@ describe("retrieveRequiredYelpData function", function() {
         expect(yelpData[0].yelpPage).toContain("www.yelp.com");
     });
 
-
-
-
-
 });
 
 describe('generateNewMap function', function() {
 
-
-
     beforeEach(function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
     });
-
 
     //enables testing of asynchronous functions
     // postpones running of 'it' functions 
@@ -335,7 +317,6 @@ describe('generateNewMap function', function() {
     });
 
     let returnedMap = generateNewMap();
-
 
     it("should exist", function() {
         expect(generateNewMap).toBeDefined();
@@ -365,13 +346,11 @@ describe("ifUndefinedReturnNA function", function() {
     });
 });
 
-
 describe("addMarkersToMap function", function() {
 
     it("should exist", function() {
-        expect(addMarkersToMap).toBeDefined()
-    })
-
+        expect(addMarkersToMap).toBeDefined();
+    });
 });
 
 describe("checkIfBusinessIsDuplicate function", function() {
@@ -380,10 +359,9 @@ describe("checkIfBusinessIsDuplicate function", function() {
         expect(checkIfBusinessIsDuplicate).toBeDefined();
     });
 
-
-
-
-    let currentYelpData = [{ yelpId: "THf6siLJPYk5NqzkNSymfQ" }];
+    let currentYelpData = [{
+        yelpId: "THf6siLJPYk5NqzkNSymfQ"
+    }];
 
     let duplicateEntry = {
         id: "THf6siLJPYk5NqzkNSymfQ"
@@ -401,11 +379,10 @@ describe("checkIfBusinessIsDuplicate function", function() {
     });
 });
 
-
 describe("getBusinessCategories function", function() {
 
     it("should exist", function() {
-        expect(getBusinessCategories).toBeDefined()
+        expect(getBusinessCategories).toBeDefined();
     });
 
     let sampleYelpBusiness = {
@@ -454,7 +431,7 @@ describe("getBusinessCategories function", function() {
         "phone": "+35316707499",
         "display_phone": "+353 1 670 7499",
         "distance": 793.2020925529741
-    }
+    };
 
     it("should return all category titles for its argument", function() {
         let returnedCategories = getBusinessCategories(sampleYelpBusiness);
@@ -462,7 +439,7 @@ describe("getBusinessCategories function", function() {
         expect(returnedCategories[0]).toBe("Desserts");
         expect(returnedCategories[1]).toBe("Tea Rooms");
         expect(returnedCategories[2]).toBe("Breakfast & Brunch");
-    })
+    });
 });
 
 describe("determineBusinessTypes function", function() {
@@ -472,9 +449,8 @@ describe("determineBusinessTypes function", function() {
     });
 
     it("should exist", function() {
-        expect(determineBusinessTypes).toBeDefined()
+        expect(determineBusinessTypes).toBeDefined();
     });
-
 
     it("should return an array where accommodation is always before activities and activities is always before foodAndDrink", function() {
 
@@ -571,21 +547,37 @@ describe("removeYelpData function", function() {
 
     it("should exist", function() {
         expect(removeYelpData).toBeDefined();
-    })
-
+    });
 
     it("should remove businesses of its argument business type from destinationExplorerData.currentYelpData if it has no other valid business types", function() {
 
-        let currentYelpData = [
-            { businessTypes: ["foodAndDrink"] },
-            { businessTypes: ["foodAndDrink"] },
-            { businessTypes: ["activities"] },
-            { businessTypes: ["foodAndDrink"] },
-            { businessTypes: ["foodAndDrink"] },
-            { businessTypes: ["accommodation"] },
-            { businessTypes: ["foodAndDrink"] },
-            { businessTypes: ["activities"] },
-            { businessTypes: ["activities"] },
+        let currentYelpData = [{
+                businessTypes: ["foodAndDrink"]
+            },
+            {
+                businessTypes: ["foodAndDrink"]
+            },
+            {
+                businessTypes: ["activities"]
+            },
+            {
+                businessTypes: ["foodAndDrink"]
+            },
+            {
+                businessTypes: ["foodAndDrink"]
+            },
+            {
+                businessTypes: ["accommodation"]
+            },
+            {
+                businessTypes: ["foodAndDrink"]
+            },
+            {
+                businessTypes: ["activities"]
+            },
+            {
+                businessTypes: ["activities"]
+            },
         ];
 
         let remainingbusinessTypess = [];
@@ -601,7 +593,6 @@ describe("removeYelpData function", function() {
 });
 
 describe("convertBusinessCategoriesToString function", function() {
-
 
     let categoriesArray = ["Hotel", "Restaurant", "Pub"];
     let returnedString = convertBusinessCategoriesToString(categoriesArray);
@@ -620,8 +611,8 @@ describe("convertBusinessCategoriesToString function", function() {
 
     it("should not end in a comma or a space", function() {
         let lastCharIndex = returnedString.length - 1;
-        expect(returnedString[lastCharIndex]).not.toBe(",")
-        expect(returnedString[lastCharIndex]).not.toBe(" ")
+        expect(returnedString[lastCharIndex]).not.toBe(",");
+        expect(returnedString[lastCharIndex]).not.toBe(" ");
     });
 
     it("should contain one less comma than there are elements in the array", function() {
@@ -631,11 +622,8 @@ describe("convertBusinessCategoriesToString function", function() {
                 numberOfCommas += 1;
             }
         }
-        expect(numberOfCommas).toBe(categoriesArray.length - 1)
+        expect(numberOfCommas).toBe(categoriesArray.length - 1);
     });
-
-
-
 
 });
 
@@ -646,14 +634,14 @@ describe("createNewCardsContent function", function() {
     });
 
     it("should return a card for each element in its argument array", function() {
-        let sampleYelpApiresponse = returnSampleYelpApiResponse()
+        let sampleYelpApiresponse = returnSampleYelpApiResponse();
         let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
 
         let newCardsContent = createNewCardsContent(yelpData);
         let numberOfNewCards = newCardsContent.match(/aside-card/g).length;
         expect(numberOfNewCards).toBe(yelpData.length);
     });
-})
+});
 
 describe("getRemovedData function", function() {
 
@@ -684,7 +672,15 @@ describe("extractRemovedIds function", function() {
 
     it("should return an array with the id value for every dictionary in its argument array", function() {
 
-        let removedData = [{ yelpId: "123" }, { yelpId: "567" }, { yelpId: "8910" }, { yelpId: "111213" }];
+        let removedData = [{
+            yelpId: "123"
+        }, {
+            yelpId: "567"
+        }, {
+            yelpId: "8910"
+        }, {
+            yelpId: "111213"
+        }];
         let extractedData = extractRemovedIds(removedData);
         expect(extractedData[0]).toBe(removedData[0].yelpId);
         expect(extractedData[1]).toBe(removedData[1].yelpId);
@@ -694,7 +690,6 @@ describe("extractRemovedIds function", function() {
 
     });
 });
-
 
 describe("createInfowindowContent function", function() {
 
@@ -706,10 +701,10 @@ describe("createInfowindowContent function", function() {
         {
             let sampleYelpApiresponse = returnSampleYelpApiResponse();
             let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
-            let marker = yelpData[1].marker
+            let marker = yelpData[1].marker;
 
             let infowindowsContent = createInfowindowContent(marker, yelpData);
-            
+
             expect(infowindowsContent.includes(yelpData[1].yelpId)).toBe(true);
             expect(infowindowsContent.includes(yelpData[1].name)).toBe(true);
             expect(infowindowsContent.includes(yelpData[1].img)).toBe(true);
@@ -718,26 +713,27 @@ describe("createInfowindowContent function", function() {
             expect(infowindowsContent.includes(yelpData[1].yelpPrice)).toBe(true);
             expect(infowindowsContent.includes(yelpData[1].yelpPage)).toBe(true);
 
-
-
         }
-    })
-})
+    });
+});
 
+describe("calculateDistanceBetweenTwoCenters function", function() {
 
-describe("calculateDistanceBetweenTwoCenters function", function(){
-    
-    it("should exist", function(){
+    it("should exist", function() {
         expect(calculateDistanceBetweenTwoCenters).toBeDefined();
     });
-    
+
     it("should return the distance in meters between two points", function() {
-        let brayDartStation = {center: new google.maps.LatLng(53.2052278, -6.1053272)};
-        let graystonesDartStation = {center: new google.maps.LatLng(53.1440815, -6.0632049)};
+        let brayDartStation = {
+            center: new google.maps.LatLng(53.2052278, -6.1053272)
+        };
+        let graystonesDartStation = {
+            center: new google.maps.LatLng(53.1440815, -6.0632049)
+        };
         let distanceBetween = calculateDistanceBetweenTwoCenters(brayDartStation, graystonesDartStation);
         expect(distanceBetween > 7000).toBe(true);
         expect(distanceBetween > 8000).toBe(false);
-        
+
     });
-    
-})
+
+});
