@@ -250,15 +250,13 @@ header {
       height: $header-height;
       background-color: $modal-btn-background-color;
       color: $modal-btn-font-color;
-      font-family: $subtitle-font; // Don't use responsive font as it trigger transition 
+      font-family: $subtitle-font; 
+      // Don't use responsive font as it triggers transition 
       font-size: 0.7rem;
 
       @include desktop() {
         font-size: 1rem;
       }
-
-      ;
-
       .material-icons {
         display: block;
       }
@@ -414,6 +412,19 @@ header {
           content: "star";
           display: inline;
           vertical-align: bottom;
+
+          // Support code from material documention: http://google.github.io/material-design-icons/
+          /* Support for all WebKit browsers. */
+          -webkit-font-smoothing: antialiased;
+          /* Support for Safari and Chrome. */
+          text-rendering: optimizeLegibility;
+
+          /* Support for Firefox. */
+          -moz-osx-font-smoothing: grayscale;
+
+          /* Support for IE. */
+          font-feature-settings: 'liga';
+
         }
       }
     }

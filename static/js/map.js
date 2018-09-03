@@ -39,9 +39,9 @@ function calculateDistanceBetweenTwoCenters(oldCenter, newCenter) {
 function clearDataIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInKilometers) {
     let metersMoved = calculateDistanceBetweenTwoCenters(oldCenter, newCenter);
     if (metersMoved > (distanceInKilometers * 1000)) {
-        let interval = setInterval(removeCardsWhenSearchComplete, 200);
+        let interval;
 
-        var removeCardsWhenSearchComplete = function () {
+        let removeCardsWhenSearchComplete = function () {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
                 $(".card-group").empty();
                 showOrHideModalButton();
@@ -49,6 +49,8 @@ function clearDataIfMovedOverSpecifiedDistance(oldCenter, newCenter, distanceInK
                 clearInterval(interval);
             }
         };
+        
+        interval = setInterval(removeCardsWhenSearchComplete, 200);
     }
 }
 
@@ -734,15 +736,17 @@ $(".filter-btn").click(function () {
 
     } else {
         let typeToRemove = determineBusinessTypesToRemove($(this));
-
-        let interval = setInterval(removeDataWhenAllSearchesComplete, 200, typeToRemove);
+        let interval;
+        
         // For dealing with when the user deselects a search filter while the API call is in progress
-        var removeDataWhenAllSearchesComplete = function (typeToRemove) {
+        let removeDataWhenAllSearchesComplete = function (typeToRemove) {
             if (destinationExplorerData.numberOfCallsRunning === 0) {
                 removeDataAndUpdatePage(typeToRemove);
                 clearInterval(interval);
             }
         };
+        
+        interval = setInterval(removeDataWhenAllSearchesComplete,  200, typeToRemove);
     }
 });
 
