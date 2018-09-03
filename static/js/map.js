@@ -473,7 +473,7 @@ function createInfoWindowContent(marker, yelpData) {
 
 function createAndViewMarkerInfoWindow(marker) {
     // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infoWindows
-
+    hideSearchButton();
     let infoWindowContent = createInfoWindowContent(marker, destinationExplorerData.currentYelpData);
     let infoWindow = new google.maps.InfoWindow({
         content: infoWindowContent,
@@ -487,9 +487,11 @@ function viewMarkerCard(businessId) {
     if (!$(`#${businessId}`).hasClass("highlight")) {
         $(".aside-card").removeClass("highlight");
         $(`#${businessId}`).addClass("highlight");
-
+        
+        let navbarHeight =  (window.innerHeight/10);
+        
         $("#cards-col").animate({
-            scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top))
+            scrollTop: (($("#cards-col").scrollTop()) + ($(`#${businessId}`).offset().top) - navbarHeight)
         }, 2000);
     }
 }
@@ -531,7 +533,6 @@ function retrieveRequiredYelpData(yelpData) {
                 })
             };
             businessObject.marker.addListener("click", function() {
-                // viewMarkerCard(businessObject.yelpId);
                 viewInfoWindowOrCard(businessObject.marker, businessObject.yelpId);
             });
             requiredYelpData.push(businessObject);
@@ -647,6 +648,7 @@ function showSearchButton() {
 function hideSearchButton() {
     $("#search-btn").addClass("hide")
 }
+
 
 let showOrHideModalButton = function() {
     if (!userIsOnMobile() && $(".aside-card").length === 0) {
