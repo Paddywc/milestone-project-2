@@ -326,7 +326,7 @@ header {
 
 // Code for center-aligning element from: https://stackoverflow.com/questions/7720730/how-to-align-the-absolute-position-to-center
 #search-btn {
-  @include transition(opacity 2s ease-in-out,
+  @include transition(opacity 1s ease-in-out,
   visibility 2.5s);
   position: absolute;
   top: 50%;

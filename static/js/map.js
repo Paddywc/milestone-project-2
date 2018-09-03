@@ -759,7 +759,7 @@ function initMapDestinationExplorer() {
     showOrHideModalButton();
     destinationExplorerData.map = generateNewMap();
     createSearchbox(destinationExplorerData.map);
-    destinationExplorerData.map.addListener('idle', function () {
+    destinationExplorerData.map.addListener('tilesloaded', function () {
         if ($(".filter-btn").hasClass("active")) {
             showSearchButton();
         }

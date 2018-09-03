@@ -691,10 +691,10 @@ describe("extractRemovedIds function", function() {
     });
 });
 
-describe("createInfowindowContent function", function() {
+describe("createInfoWindowContent function", function() {
 
     it("should exist", function() {
-        expect(createInfowindowContent).toBeDefined();
+        expect(createInfoWindowContent).toBeDefined();
     });
 
     it("should return a card that includes the business yelpId, name, img, categories, yelpRating, yelpPrice and yelpPage", function() {
@@ -703,7 +703,7 @@ describe("createInfowindowContent function", function() {
             let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
             let marker = yelpData[1].marker;
 
-            let infowindowsContent = createInfowindowContent(marker, yelpData);
+            let infowindowsContent = createInfoWindowContent(marker, yelpData);
 
             expect(infowindowsContent.includes(yelpData[1].yelpId)).toBe(true);
             expect(infowindowsContent.includes(yelpData[1].name)).toBe(true);
