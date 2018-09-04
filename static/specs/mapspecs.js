@@ -277,7 +277,6 @@ describe('getYelpData function', function() {
 
     it("Should return and object", function() {
         expect(typeof results).toBe("object");
-
     });
 
 });
@@ -287,6 +286,7 @@ describe("retrieveRequiredYelpData function", function() {
     it("should exist", function() {
         expect(retrieveRequiredYelpData).toBeDefined();
     });
+    
     let sampleYelpApiresponse = returnSampleYelpApiResponse();
     let yelpData = retrieveRequiredYelpData(sampleYelpApiresponse);
 

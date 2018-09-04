@@ -1,4 +1,7 @@
+/*========================Google Fonts imports*/
 @import url('https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700|Maitree|Overlock');
+
+/*========================Variables*/
 $tablet-width: 768px;
 $desktop-width: 1025px;
 $header-height: 10vh;
@@ -27,6 +30,7 @@ $dropdown-btn-font-color: #FAECF4;
 $cards-col-background-color: #fbe8a6;
 $cards-col-how-it-works-font-color: #656464;
 
+/*========================Mixins*/
 @mixin tablet {
   @media (min-width: $tablet-width) and (max-width: $desktop-width - 1px) {
     @content;
@@ -108,6 +112,7 @@ $desktop-font) {
   transition: $x;
 }
 
+/*========================Header*/
 header {
   height: $header-height;
 
@@ -306,6 +311,7 @@ header {
   }
 }
 
+/*========================Map*/
 #map {
   width: 100vw;
   height: $body-height;
@@ -356,6 +362,7 @@ header {
   visibility: hidden;
 }
 
+/*=======================Cards and 'How it Works' section */
 #cards-col {
   padding: 0;
   z-index: 0;
@@ -427,6 +434,10 @@ header {
 
         }
       }
+      
+      .card-text, .card-subtitle{
+        font-weight: 600;
+      }
     }
   }
 
@@ -493,13 +504,23 @@ header {
   #how-it-works-modal-title {
     @include how-it-works-title();
   }
-
+  
+  .how-it-works-subtitle{
+    font-family: $subtitle-font;
+     @include responsive-font-size(1.8,
+    1,
+    0.8);
+    color: #086BAC;
+    font-weight: 600;
+    margin-left: 0.5em;
+  }
+  
   .instructions-list {
     list-style-type: circle;
     font-family: $core-font;
-    @include responsive-font-size(1.5,
-    1.0,
-    0.9);
+    @include responsive-font-size(1.6,
+    0.9,
+    0.8);
 
     li {
       padding: 0.2em;

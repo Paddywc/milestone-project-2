@@ -117,7 +117,6 @@ function toggleButtonActiveClass(button) {
 
 // To avoid loop where clicking filter checkbox triggers filter button click and vice versa
 function checkIfFiltersSynchronized(button, checkbox) {
-
     if (($(button).hasClass("active") && $(checkbox).is(":checked")) || ($(button).hasClass("disabled") && !$(checkbox).is(":checked"))) {
         return true;
     } else {
@@ -126,7 +125,6 @@ function checkIfFiltersSynchronized(button, checkbox) {
 }
 
 function synchronizeButtonsAndCheckboxes(itemClicked) {
-
     let filtersAlreadySynchronized, filterCategory;
 
     if ($(itemClicked).hasClass("activities-filter")) {
@@ -165,7 +163,6 @@ function synchronizeButtonsAndCheckboxes(itemClicked) {
 }
 
 $(".filter-checkbox").click(function () {
-
     synchronizeButtonsAndCheckboxes(this);
 });
 
@@ -213,7 +210,6 @@ function displaySearchCompletedToUser() {
 }
 
 function getYelpData(latitude, longitude, searchQuery) {
-
     displaySearchingToUser();
 
     function handleError(xhr, status, error) {
@@ -250,7 +246,6 @@ function getYelpData(latitude, longitude, searchQuery) {
 
 // Initial center of map is Dublin city center
 let generateNewMap = function (latitude = 53.3498053, longitude = -6.2603097) {
-
     //   Code from: https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
     let map = new google.maps.Map(document.getElementById('map'), {
         zoom: 15,
@@ -309,7 +304,6 @@ function convertBusinessCategoriesToString(categoriesArray) {
 }
 
 function getYelpCategoriesForBusinessType(businessType) {
-
     // Subcategories retrieved from yelp using filter terms from getSearchString
     // Data from: https://www.yelp.com/developers/documentation/v3/all_category_list
     let foodAndDrink = ['Acai Bowls', 'Backshop', 'Bagels', 'Bakeries', 'Beer, Wine & Spirits', 'Bento', 'Beverage Store', 'Breweries', 'Bubble Tea', 'Butcher', 'CSA', 'Chimney Cakes', 'Churros', 'Cideries', 'Coffee & Tea', 'Coffee & Tea Supplies', 'Coffee Roasteries', 'Convenience Stores', 'Cupcakes', 'Custom Cakes', 'Delicatessen', 'Desserts', 'Distilleries', 'Do-It-Yourself Food', 'Donairs', 'Donuts', 'Empanadas', 'Ethical Grocery', 'Farmers Market', 'Fishmonger', 'Food Delivery Services', 'Food Trucks', 'Friterie', 'Gelato', 'Grocery', 'Hawker Centre', 'Honey', 'Ice Cream & Frozen Yogurt', 'Imported Food', 'International Grocery', 'Internet Cafes', 'Japanese Sweets', 'Juice Bars & Smoothies', 'Kiosk', 'Kombucha', 'Milkshake Bars', 'Bars', 'Mulled Wine', 'Nasi Lemak', 'Organic Stores', 'Panzerotti', 'Parent Cafes', 'Patisserie/Cake Shop', 'Piadina', 'Poke', 'Pretzels', 'Salumerie', 'Shaved Ice', 'Shaved Snow', 'Smokehouse', 'Specialty Food', 'Candy Stores', 'Cheese Shops', 'Chocolatiers & Shops', 'Dagashi', 'Dried Fruit', 'Frozen Food', 'Fruits & Veggies', 'Health Markets', 'Herbs & Spices', 'Macarons', 'Meat Shops', 'Olive Oil', 'Pasta Shops', 'Popcorn Shops', 'Seafood Markets', 'Tofu Shops', 'Street Vendors', 'Sugar Shacks', 'Tea Rooms', 'Torshi', 'Tortillas', 'Water Stores', 'Wineries', 'Wine Tasting Room', 'Zapiekanka', 'BarsxxAbsinthe Bars', 'Airport Lounges', 'Beach Bars', 'Beer Bar', 'Champagne Bars', 'Cigar Bars', 'Cocktail Bars', 'Dive Bars', 'Drive-Thru Bars', 'Gay Bars', 'Hookah Bars', 'Hotel bar', 'Irish Pub', 'Lounges', 'Pubs', 'Pulquerias', 'Sake Bars', 'Speakeasies', 'Sports Bars', 'Tabac', 'Food', 'Tiki Bars', 'Vermouth Bars', 'Whiskey Bars', 'Wine Bars'];
@@ -329,7 +323,6 @@ function getYelpCategoriesForBusinessType(businessType) {
 }
 
 function determineBusinessTypes(businessCategories) {
-
     let foodAndDrink = getYelpCategoriesForBusinessType("foodAndDrink");
     let accommodation = getYelpCategoriesForBusinessType("accommodation");
     let activities = getYelpCategoriesForBusinessType("activities");
@@ -382,7 +375,6 @@ function determineBusinessTypes(businessCategories) {
 }
 
 function determineIconToUse(yelpBusiness) {
-
     // Icons to appear as markers on map
     let foodIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGTSURBVFhH7ZLPSsNAEIdz10I3Wyz6Lgp6EwR9GP+f9CiVbEKfo5rEk6BelF59EEUvehBEndlMQpwh3W71IuaDhcxvv5ndJg1aWkqyOPycZVF71U+lsxaUgu+i9t+7AJVOuO9bC5wCg/u+tcApMLjvWwucAoP7vrXAKTC471sLnAKD+761wCkwuO9bC1KjXlG4HPTnKGokPdEddNNYvVAU4DNmo6i3WNThXWrCW3zGjPsCEO6tlOhVihpBB13soQgvcI1Znqhtiipgb9/ONuqKIkkWq2OSUooaAS9HNzPqiCJ4g90Vm8XhG8zYSYd6CRfM3S2y8OM86i6TLhkN+gsgPtPgPYoFmQkP0IGBT/npfI9iC/5SPMjOqC2bTZhZkRu9BQe8F40qw1eN39t+80ivwaALu4dOojep7Ru5Uetw2E11OHwazGjbDQ6GAx7LAXzBn+shi7sbpDdS+lT6cTbsaGg+hMPGtYPH+Ppxj7SJ/OgCdWYd1F6gvcDfvUDZ6FqkNzKtJ6gfMmmR3si0Xst/Jwi+AL08M6wrFEz7AAAAAElFTkSuQmCC';
     let activitiesIcon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEsSURBVFhH7ZRNisJAEIV75R28gloRshyX4nFkTjEKcwHxCEa9hD9Hicu5wliveQ5RelpiuhQhHxSE95KqSnd1u5a6FL1eZ51l32uRkjGHRtseFNQGfq9CNdr2FCInX7Tf/9gMhyM2UNK259IAir+kgdAWFFn2RdseP4QiM/w1Y/aUIbz96/+Cr6cnVCwUfN2G1WAwQRHd8x0lh2do8CjZsRL59A2ILCjhVCx8A+pRskMLLbkCU0pYgSk0eJTs0Inf+2IiY0rQxtT2lOzQQj8ots3zLiWHZ9+AepRsiBWCBq/aWHJiSw2N3t/WJCc2bNDgVYczObHjFjqeyYldOKELqjGa7IikTUJX5MB09QklfCSYrj5NE7QNvG8Dlw9TB9PfJ/RximD6lpYbnDsDu+iNTz9RmNwAAAAASUVORK5CYII=';
@@ -502,7 +494,6 @@ function retrieveRequiredYelpData(yelpData) {
 }
 
 function addMarkersToMap(currentYelpData, currentMarkerCluster, map) {
-
     let markersArray = [];
 
     let yelpData = currentYelpData;
@@ -575,7 +566,6 @@ function checkIfOtherValidCategories(business) {
 }
 
 function removeYelpData(yelpData, typeToRemove) {
-
     for (let i = 0; i < yelpData.length; i++) {
         if (yelpData[i].businessTypes[0] === typeToRemove) {
             yelpData[i] = checkIfOtherValidCategories(yelpData[i]);
@@ -607,7 +597,6 @@ let showOrHideModalButton = function () {
 $(window).resize(showOrHideModalButton);
 
 function viewOnMap(businessId) {
-
     let businessMarker;
     destinationExplorerData.currentYelpData.forEach(function (business) {
         if (business.yelpId === businessId) {
@@ -704,7 +693,6 @@ function extractRemovedIds(removedData) {
 }
 
 function removeCards(removedData) {
-
     let removedIds = extractRemovedIds(removedData);
 
     $(".aside-card").each(function () {

@@ -1,4 +1,8 @@
+/*========================Google Fonts imports*/
 @import url("https://fonts.googleapis.com/css?family=EB+Garamond:400,500,700|Maitree|Overlock");
+/*========================Variables*/
+/*========================Mixins*/
+/*========================Header*/
 header {
   height: 10vh;
   background-color: #929191; }
@@ -143,6 +147,7 @@ header {
       display: inline-block;
       transform: translateY(10%); }
 
+/*========================Map*/
 #map {
   width: 100vw;
   height: 90vh; }
@@ -191,6 +196,7 @@ header {
   opacity: 0;
   visibility: hidden; }
 
+/*=======================Cards and 'How it Works' section */
 #cards-col {
   padding: 0;
   z-index: 0;
@@ -244,6 +250,8 @@ header {
         -moz-osx-font-smoothing: grayscale;
         /* Support for IE. */
         font-feature-settings: 'liga'; }
+      #cards-col .aside-card.highlight .card-text, #cards-col .aside-card.highlight .card-subtitle {
+        font-weight: 600; }
   #cards-col .card-img-top {
     max-height: 15em;
     object-fit: cover; }
@@ -317,16 +325,28 @@ header {
   @media (min-width: 1025px) {
     .how-it-works-section #how-it-works-modal-title {
       font-size: calc(((1.5vw * 2)/3) + 1.5vmax); } }
+.how-it-works-section .how-it-works-subtitle {
+  font-family: "Maitree", serif;
+  font-size: calc(((1.8vw * 2)/3) + 1.8vmax);
+  color: #086BAC;
+  font-weight: 600;
+  margin-left: 0.5em; }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .how-it-works-section .how-it-works-subtitle {
+      font-size: calc(((1vw * 2)/3) + 1vmax); } }
+  @media (min-width: 1025px) {
+    .how-it-works-section .how-it-works-subtitle {
+      font-size: calc(((0.8vw * 2)/3) + 0.8vmax); } }
 .how-it-works-section .instructions-list {
   list-style-type: circle;
   font-family: "Overlock", cursive;
-  font-size: calc(((1.5vw * 2)/3) + 1.5vmax); }
+  font-size: calc(((1.6vw * 2)/3) + 1.6vmax); }
   @media (min-width: 768px) and (max-width: 1024px) {
     .how-it-works-section .instructions-list {
-      font-size: calc(((1vw * 2)/3) + 1vmax); } }
+      font-size: calc(((0.9vw * 2)/3) + 0.9vmax); } }
   @media (min-width: 1025px) {
     .how-it-works-section .instructions-list {
-      font-size: calc(((0.9vw * 2)/3) + 0.9vmax); } }
+      font-size: calc(((0.8vw * 2)/3) + 0.8vmax); } }
   .how-it-works-section .instructions-list li {
     padding: 0.2em; }
     @media (min-width: 768px) and (max-width: 1024px) {
