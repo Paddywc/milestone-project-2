@@ -252,9 +252,9 @@ describe('getYelpData function', function() {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
     });
 
-    //enables testing of asynchronous functions
-    // postpones running of 'it' functions 
-    //code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
+    //Enables testing of asynchronous functions
+    // Postpones running of 'it' functions 
+    //Code source: https://metabroadcast.com/blog/asynchronous-testing-with-jasmine 
     beforeEach(function(done) {
         setTimeout(function() {
             result = 'a different value';

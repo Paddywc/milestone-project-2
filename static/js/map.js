@@ -424,7 +424,7 @@ function createInfoWindowContent(marker, yelpData) {
 }
 
 function createAndViewMarkerInfoWindow(marker) {
-    // Code partly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infoWindows
+    // Code largly from Google Maps documentation: https://developers.google.com/maps/documentation/javascript/infoWindows
     hideSearchButton();
     let infoWindowContent = createInfoWindowContent(marker, destinationExplorerData.currentYelpData);
     let infoWindow = new google.maps.InfoWindow({
