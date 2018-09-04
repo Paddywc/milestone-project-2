@@ -64,8 +64,8 @@ The website was also designed to be quick and easy-to-use on mobile devices. Ste
     * Used to unit test the JavaScript code. This code is found in [mapspecs.js](https://github.com/Paddywc/milestone-project-2/blob/master/static/specs/mapspecs.js) 
 
 ## Testing
-- All code used on the site has been tested to ensure that everything works as expected
-- Site viewed and tested on the following browsers:
+All code used on the site has been tested to ensure that everything works as expected.
+Site viewed and tested on the following browsers:
     * Google Chrome
     * Mozilla Firefox
     * Safari 
@@ -90,7 +90,7 @@ This largely fixed the bug. However, the Yelp API uses a [business’s area of o
 #### Yelp Data not being removed from the Map
 Even after deselecting all businesss type, some data could still remain on the map and cards.
 ![Remaining Data Bug Screenshot](https://i.snag.gy/HKpnha.jpg)
-To determine the cause of this bug, one of these remaining businesses was identified and its yelp page visited. The business in question was categorised by Yelp as a ‘Bar’.  However, the getYelpCategoriesForBusinessType function only included (Yelp subcategories)[https://www.yelp.com/developers/documentation/v3/all_category_list], and not primary categories. In this example, it had included subcategories of ‘Bar’ (e.g. Airport Lounges), but not the actual ‘Bar’ category.  Therefore, it reached the else statement in the determineIconToUse function and was incorrectly given the Activities icon. However, since it did not contain any activity categories, it was not removed when the Activities results were removed.
+To determine the cause of this bug, one of these remaining businesses was identified and its yelp page visited. The business in question was categorised by Yelp as a ‘Bar’.  However, the getYelpCategoriesForBusinessType function only included [Yelp subcategories](https://www.yelp.com/developers/documentation/v3/all_category_list], and not primary categories. In this example, it had included subcategories of ‘Bar’ (e.g. Airport Lounges), but not the actual ‘Bar’ category.  Therefore, it reached the else statement in the determineIconToUse function and was incorrectly given the Activities icon. However, since it did not contain any activity categories, it was not removed when the Activities results were removed.
 To fix this bug, all primary Yelp categories were added to the getYelpCategoriesForBusinessType function. 
 
 ## Contributing
